@@ -1,0 +1,2397 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社員総会投票システム - デザインテーマ選定</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', 'Inter', sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+
+        /* ===== ヘッダー ===== */
+        .header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 24px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* ===== タブナビゲーション ===== */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 88px;
+            z-index: 99;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: #f5f5f5;
+            border-radius: 24px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all var(--transition-speed);
+            color: #666;
+        }
+
+        .tab-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .tab-btn.active {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        /* ===== テーマコンテンツ ===== */
+        .theme-content {
+            display: none;
+            padding: 20px;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .theme-content.active {
+            display: block;
+        }
+
+        .theme-info {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .theme-info h2 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #1a1a2e;
+        }
+
+        .theme-info p {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .theme-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .feature-tag {
+            background: #f0f2f5;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            color: #555;
+        }
+
+        /* ===== ページ切り替え ===== */
+        .page-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .page-toggle-btn {
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all var(--transition-speed);
+        }
+
+        .page-toggle-btn.active {
+            border-color: #1a1a2e;
+            background: #1a1a2e;
+            color: white;
+        }
+
+        /* ===== モックアップフレーム ===== */
+        .mockup-frame {
+            background: #1a1a2e;
+            border-radius: 32px;
+            padding: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .mockup-screen {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .mockup-page {
+            display: none;
+        }
+
+        .mockup-page.active {
+            display: block;
+        }
+
+        /* ========================================
+           テーマ1: Corporate Elegance
+           ======================================== */
+        .theme1 .mockup-screen {
+            background: linear-gradient(180deg, #fafbfc 0%, #f0f2f5 100%);
+        }
+
+        .theme1 .vote-header {
+            background: linear-gradient(135deg, #0f4c75 0%, #1b262c 100%);
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+        }
+
+        .theme1 .vote-header h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .theme1 .vote-header p {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .theme1 .vote-instruction {
+            padding: 16px 20px;
+            text-align: center;
+            color: #555;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .theme1 .card-grid {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .theme1 .dept-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme1 .dept-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .theme1 .dept-card.selected {
+            border-color: #0f4c75;
+            background: linear-gradient(180deg, #e8f4fc 0%, white 100%);
+        }
+
+        .theme1 .dept-card.selected::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background: #0f4c75;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme1 .dept-card.selected::before {
+            content: '\2713';
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 1;
+        }
+
+        .theme1 .dept-image {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .theme1 .dept-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1b262c;
+            line-height: 1.3;
+        }
+
+        .theme1 .vote-button {
+            margin: 20px;
+            padding: 16px;
+            background: linear-gradient(135deg, #0f4c75 0%, #1b262c 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: calc(100% - 40px);
+            transition: all 0.25s ease;
+        }
+
+        .theme1 .vote-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(15,76,117,0.4);
+        }
+
+        /* 結果ページ */
+        .theme1 .result-header {
+            background: linear-gradient(135deg, #0f4c75 0%, #1b262c 100%);
+            color: white;
+            padding: 32px 20px;
+            text-align: center;
+        }
+
+        .theme1 .result-header h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .theme1 .result-count {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 12px 0;
+        }
+
+        .theme1 .result-count span {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .theme1 .result-list {
+            padding: 20px;
+        }
+
+        .theme1 .result-item {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .theme1 .result-item.winner {
+            background: linear-gradient(135deg, #ffd700 0%, #ffec8b 100%);
+            box-shadow: 0 4px 20px rgba(255,215,0,0.4);
+        }
+
+        .theme1 .result-rank {
+            width: 36px;
+            height: 36px;
+            background: #0f4c75;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .theme1 .result-item.winner .result-rank {
+            background: #b8860b;
+        }
+
+        .theme1 .result-info {
+            flex: 1;
+        }
+
+        .theme1 .result-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+
+        .theme1 .result-bar-bg {
+            height: 8px;
+            background: #e8e8e8;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .theme1 .result-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #0f4c75 0%, #3282b8 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .theme1 .result-item.winner .result-bar {
+            background: linear-gradient(90deg, #b8860b 0%, #daa520 100%);
+        }
+
+        .theme1 .result-votes {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #0f4c75;
+            min-width: 48px;
+            text-align: right;
+        }
+
+        .theme1 .result-item.winner .result-votes {
+            color: #8b6914;
+        }
+
+        /* ========================================
+           テーマ2: Vibrant Festival
+           ======================================== */
+        .theme2 .mockup-screen {
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+
+        .theme2 .vote-header {
+            padding: 28px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .theme2 .vote-header h1 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .theme2 .vote-header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .theme2 .vote-instruction {
+            padding: 12px 20px;
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            margin: 0 16px;
+            border-radius: 12px;
+        }
+
+        .theme2 .card-grid {
+            padding: 20px 16px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .theme2 .dept-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 20px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme2 .dept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .theme2 .dept-card:hover {
+            transform: scale(1.03);
+        }
+
+        .theme2 .dept-card.selected::before {
+            opacity: 1;
+        }
+
+        .theme2 .dept-card.selected .dept-name,
+        .theme2 .dept-card.selected .dept-image {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+
+        .theme2 .dept-card.selected::after {
+            content: '\2713';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 28px;
+            height: 28px;
+            background: white;
+            color: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            z-index: 2;
+        }
+
+        .theme2 .dept-image {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .theme2 .dept-card.selected .dept-image {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .theme2 .dept-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.3;
+            position: relative;
+            z-index: 1;
+        }
+
+        .theme2 .vote-button {
+            margin: 16px;
+            padding: 18px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: calc(100% - 32px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+
+        .theme2 .vote-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        /* 結果ページ */
+        .theme2 .result-header {
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .theme2 .result-header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .theme2 .result-count {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 16px 0;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .theme2 .result-count span {
+            font-size: 1.2rem;
+        }
+
+        .theme2 .result-list {
+            padding: 20px 16px;
+        }
+
+        .theme2 .result-item {
+            background: rgba(255,255,255,0.95);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .theme2 .result-item.winner {
+            background: white;
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(255,215,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme2 .result-item.winner::before {
+            content: '1st';
+            position: absolute;
+            top: 12px;
+            right: -24px;
+            background: linear-gradient(90deg, #ffd700 0%, #ffec8b 100%);
+            color: #8b6914;
+            padding: 4px 32px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            transform: rotate(45deg);
+        }
+
+        .theme2 .result-rank {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .theme2 .result-item.winner .result-rank {
+            background: linear-gradient(135deg, #ffd700 0%, #ffec8b 100%);
+            color: #8b6914;
+        }
+
+        .theme2 .result-info {
+            flex: 1;
+        }
+
+        .theme2 .result-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .theme2 .result-bar-bg {
+            height: 10px;
+            background: #e8e8e8;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .theme2 .result-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 5px;
+        }
+
+        .theme2 .result-item.winner .result-bar {
+            background: linear-gradient(90deg, #ffd700 0%, #f093fb 100%);
+        }
+
+        .theme2 .result-votes {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #667eea;
+            min-width: 48px;
+            text-align: right;
+        }
+
+        .theme2 .result-item.winner .result-votes {
+            color: #b8860b;
+        }
+
+        /* ========================================
+           テーマ3: Minimal Zen
+           ======================================== */
+        .theme3 .mockup-screen {
+            background: #ffffff;
+        }
+
+        .theme3 .vote-header {
+            padding: 32px 24px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .theme3 .vote-header h1 {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #111;
+            letter-spacing: 0.5px;
+        }
+
+        .theme3 .vote-header p {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 6px;
+            letter-spacing: 1px;
+        }
+
+        .theme3 .vote-instruction {
+            padding: 20px 24px;
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+            font-weight: 300;
+        }
+
+        .theme3 .card-grid {
+            padding: 8px 24px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            background: #f0f0f0;
+        }
+
+        .theme3 .dept-card {
+            background: white;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+        }
+
+        .theme3 .dept-card:hover {
+            background: #fafafa;
+        }
+
+        .theme3 .dept-card.selected {
+            background: #111;
+        }
+
+        .theme3 .dept-card.selected .dept-name {
+            color: white;
+        }
+
+        .theme3 .dept-card.selected .dept-image {
+            background: white;
+            color: #111;
+        }
+
+        .theme3 .dept-card.selected::after {
+            content: '\2192';
+            position: absolute;
+            right: 20px;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .theme3 .dept-image {
+            width: 48px;
+            height: 48px;
+            background: #111;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .theme3 .dept-name {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #111;
+            letter-spacing: 0.3px;
+        }
+
+        .theme3 .vote-button {
+            margin: 24px;
+            padding: 18px;
+            background: #111;
+            color: white;
+            border: none;
+            border-radius: 0;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+            cursor: pointer;
+            width: calc(100% - 48px);
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+
+        .theme3 .vote-button:hover {
+            background: #333;
+        }
+
+        /* 結果ページ */
+        .theme3 .result-header {
+            padding: 48px 24px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .theme3 .result-header h1 {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #888;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .theme3 .result-count {
+            font-size: 4rem;
+            font-weight: 200;
+            color: #111;
+            margin: 24px 0 8px;
+        }
+
+        .theme3 .result-count span {
+            font-size: 1rem;
+            color: #888;
+            letter-spacing: 1px;
+        }
+
+        .theme3 .result-list {
+            padding: 32px 24px;
+        }
+
+        .theme3 .result-item {
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .theme3 .result-item.winner {
+            padding: 28px 0;
+        }
+
+        .theme3 .result-item.winner .result-name {
+            font-size: 1.1rem;
+        }
+
+        .theme3 .result-item.winner .result-votes {
+            font-size: 2rem;
+        }
+
+        .theme3 .result-rank {
+            width: 32px;
+            font-size: 0.8rem;
+            color: #888;
+            text-align: center;
+        }
+
+        .theme3 .result-item.winner .result-rank {
+            font-size: 1rem;
+            color: #111;
+            font-weight: 500;
+        }
+
+        .theme3 .result-info {
+            flex: 1;
+        }
+
+        .theme3 .result-name {
+            font-weight: 400;
+            font-size: 0.9rem;
+            color: #111;
+            margin-bottom: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        .theme3 .result-bar-bg {
+            height: 2px;
+            background: #f0f0f0;
+        }
+
+        .theme3 .result-bar {
+            height: 100%;
+            background: #111;
+        }
+
+        .theme3 .result-item.winner .result-bar {
+            height: 4px;
+        }
+
+        .theme3 .result-votes {
+            font-weight: 300;
+            font-size: 1.2rem;
+            color: #111;
+            min-width: 48px;
+            text-align: right;
+        }
+
+        /* ========================================
+           テーマ4: Neon White (ホワイトベース + ネオンカラー)
+           ======================================== */
+        .theme4 .mockup-screen {
+            background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        .theme4 .vote-header {
+            padding: 28px 20px;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(135deg, rgba(0,245,255,0.05) 0%, rgba(255,0,128,0.05) 100%);
+        }
+
+        .theme4 .vote-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, #00f5ff 0%, #ff0080 100%);
+        }
+
+        .theme4 .vote-header h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            background: linear-gradient(90deg, #00c9d4 0%, #d400a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .theme4 .vote-header p {
+            font-size: 0.8rem;
+            color: #00c9d4;
+            margin-top: 6px;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .theme4 .vote-instruction {
+            padding: 16px 20px;
+            text-align: center;
+            color: #555;
+            font-size: 0.85rem;
+        }
+
+        .theme4 .card-grid {
+            padding: 16px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .theme4 .dept-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 20px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .theme4 .dept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0,245,255,0.08) 0%, rgba(255,0,128,0.08) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .theme4 .dept-card:hover::before {
+            opacity: 1;
+        }
+
+        .theme4 .dept-card:hover {
+            border-color: #00d4d4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,212,212,0.15);
+        }
+
+        .theme4 .dept-card.selected {
+            border-color: #00c9d4;
+            background: linear-gradient(135deg, rgba(0,245,255,0.1) 0%, rgba(255,0,128,0.05) 100%);
+            box-shadow: 0 0 0 3px rgba(0,201,212,0.2), 0 8px 24px rgba(0,201,212,0.2);
+        }
+
+        .theme4 .dept-card.selected::after {
+            content: '\2713';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #00c9d4 0%, #00a0b0 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0,201,212,0.4);
+        }
+
+        .theme4 .dept-image {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #00c9d4 0%, #00a0b0 100%);
+            border: none;
+            border-radius: 16px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: white;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 12px rgba(0,201,212,0.3);
+        }
+
+        .theme4 .dept-card.selected .dept-image {
+            background: linear-gradient(135deg, #d400a0 0%, #ff0080 100%);
+            box-shadow: 0 4px 16px rgba(212,0,160,0.4);
+        }
+
+        .theme4 .dept-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.3;
+            position: relative;
+            z-index: 1;
+        }
+
+        .theme4 .vote-button {
+            margin: 20px 16px;
+            padding: 18px;
+            background: linear-gradient(135deg, #00c9d4 0%, #00a0b0 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: calc(100% - 32px);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,201,212,0.4);
+        }
+
+        .theme4 .vote-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .theme4 .vote-button:hover {
+            background: linear-gradient(135deg, #d400a0 0%, #ff0080 100%);
+            box-shadow: 0 6px 24px rgba(212,0,160,0.4);
+            transform: translateY(-2px);
+        }
+
+        .theme4 .vote-button:hover::before {
+            left: 100%;
+        }
+
+        /* 結果ページ */
+        .theme4 .result-header {
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(135deg, rgba(0,245,255,0.05) 0%, rgba(255,0,128,0.05) 100%);
+        }
+
+        .theme4 .result-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, #00f5ff 0%, #ff0080 100%);
+        }
+
+        .theme4 .result-header h1 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #666;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .theme4 .result-count {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00c9d4 0%, #d400a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 16px 0;
+        }
+
+        .theme4 .result-count span {
+            font-size: 1rem;
+            color: #888;
+            -webkit-text-fill-color: #888;
+        }
+
+        .theme4 .result-list {
+            padding: 24px 16px;
+        }
+
+        .theme4 .result-item {
+            background: white;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .theme4 .result-item:hover {
+            border-color: #00c9d4;
+            box-shadow: 0 4px 16px rgba(0,201,212,0.15);
+        }
+
+        .theme4 .result-item.winner {
+            border-color: #d400a0;
+            box-shadow: 0 0 0 3px rgba(212,0,160,0.1), 0 8px 24px rgba(212,0,160,0.2);
+            background: linear-gradient(135deg, rgba(255,0,128,0.03) 0%, rgba(255,0,128,0.08) 100%);
+        }
+
+        .theme4 .result-rank {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #00c9d4 0%, #00a0b0 100%);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px rgba(0,201,212,0.3);
+        }
+
+        .theme4 .result-item.winner .result-rank {
+            background: linear-gradient(135deg, #d400a0 0%, #ff0080 100%);
+            box-shadow: 0 4px 12px rgba(212,0,160,0.4);
+        }
+
+        .theme4 .result-info {
+            flex: 1;
+        }
+
+        .theme4 .result-name {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .theme4 .result-bar-bg {
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .theme4 .result-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00c9d4 0%, #00d4aa 100%);
+            border-radius: 4px;
+        }
+
+        .theme4 .result-item.winner .result-bar {
+            background: linear-gradient(90deg, #d400a0 0%, #ff6b9d 100%);
+        }
+
+        .theme4 .result-votes {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #00a0b0;
+            min-width: 48px;
+            text-align: right;
+        }
+
+        .theme4 .result-item.winner .result-votes {
+            color: #d400a0;
+        }
+
+        /* 結果ページ クリック可能行 */
+        .theme4 .result-item.clickable {
+            cursor: pointer;
+        }
+
+        .theme4 .result-item.clickable:hover {
+            transform: translateX(4px);
+            border-color: #00c9d4;
+        }
+
+        .theme4 .result-item.clickable::after {
+            content: '>';
+            position: absolute;
+            right: 16px;
+            color: #00c9d4;
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .theme4 .result-item.clickable:hover::after {
+            opacity: 1;
+        }
+
+        .theme4 .result-item {
+            position: relative;
+        }
+
+        /* ===== テーマ4: 評価ページ ===== */
+        .theme4 .eval-header {
+            padding: 24px 20px;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(135deg, rgba(0,245,255,0.05) 0%, rgba(255,0,128,0.05) 100%);
+        }
+
+        .theme4 .eval-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, #00f5ff 0%, #ff0080 100%);
+        }
+
+        .theme4 .eval-header h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            background: linear-gradient(90deg, #00c9d4 0%, #d400a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .theme4 .eval-header .current-dept {
+            font-size: 1rem;
+            color: #00a0b0;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .theme4 .step-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            padding: 16px 20px;
+            background: #f8f9fa;
+            flex-wrap: wrap;
+        }
+
+        .theme4 .step {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            color: #999;
+        }
+
+        .theme4 .step.active {
+            color: #00c9d4;
+            font-weight: 600;
+        }
+
+        .theme4 .step.completed {
+            color: #00a0b0;
+        }
+
+        .theme4 .step-number {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.65rem;
+        }
+
+        .theme4 .step.active .step-number {
+            background: linear-gradient(135deg, #00c9d4 0%, #00a0b0 100%);
+            color: white;
+        }
+
+        .theme4 .step.completed .step-number {
+            background: linear-gradient(135deg, #00c9d4 0%, #00a0b0 100%);
+            color: white;
+        }
+
+        .theme4 .step.completed .step-number::after {
+            content: '\2713';
+        }
+
+        .theme4 .step-arrow {
+            color: #ccc;
+            font-size: 0.7rem;
+        }
+
+        .theme4 .eval-instruction {
+            padding: 12px 20px;
+            text-align: center;
+            color: #555;
+            font-size: 0.85rem;
+        }
+
+        .theme4 .eval-items {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .theme4 .eval-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .theme4 .eval-item-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .theme4 .rating-buttons {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .theme4 .rating-btn {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            color: #666;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme4 .rating-btn:hover {
+            border-color: #00c9d4;
+            color: #00c9d4;
+            transform: scale(1.05);
+        }
+
+        .theme4 .rating-btn.selected {
+            background: linear-gradient(135deg, #00c9d4 0%, #00a0b0 100%);
+            border-color: #00c9d4;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,201,212,0.4);
+        }
+
+        .theme4 .rating-btn.selected-high {
+            background: linear-gradient(135deg, #d400a0 0%, #ff0080 100%);
+            border-color: #d400a0;
+            color: white;
+            box-shadow: 0 2px 8px rgba(212,0,160,0.4);
+        }
+
+        .theme4 .rating-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #999;
+            margin-top: 8px;
+            padding: 0 4px;
+        }
+
+        .theme4 .button-group {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+        }
+
+        .theme4 .back-button {
+            flex: 1;
+            padding: 16px;
+            background: white;
+            color: #00a0b0;
+            border: 2px solid #00c9d4;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme4 .back-button:hover {
+            background: rgba(0,201,212,0.1);
+        }
+
+        .theme4 .next-button {
+            flex: 2;
+            padding: 16px;
+            background: linear-gradient(135deg, #00c9d4 0%, #00a0b0 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0,201,212,0.4);
+        }
+
+        .theme4 .next-button:hover {
+            background: linear-gradient(135deg, #d400a0 0%, #ff0080 100%);
+            box-shadow: 0 6px 24px rgba(212,0,160,0.4);
+        }
+
+        .theme4 .submit-button {
+            flex: 2;
+            padding: 16px;
+            background: linear-gradient(135deg, #d400a0 0%, #ff0080 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(212,0,160,0.4);
+        }
+
+        .theme4 .submit-button:hover {
+            background: linear-gradient(135deg, #b8008a 0%, #d400a0 100%);
+            box-shadow: 0 6px 24px rgba(212,0,160,0.5);
+        }
+
+        /* ===== テーマ4: 項目別詳細ページ ===== */
+        .theme4 .detail-header {
+            padding: 24px 20px;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(135deg, rgba(0,245,255,0.05) 0%, rgba(255,0,128,0.05) 100%);
+        }
+
+        .theme4 .detail-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, #00f5ff 0%, #ff0080 100%);
+        }
+
+        .theme4 .detail-header h1 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #666;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .theme4 .detail-header .dept-name-display {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00c9d4 0%, #d400a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: 8px;
+        }
+
+        .theme4 .detail-header .total-score {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .theme4 .item-stats {
+            padding: 20px 16px;
+        }
+
+        .theme4 .item-stat-card {
+            background: white;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .theme4 .item-stat-card:hover {
+            border-color: #00c9d4;
+            box-shadow: 0 4px 16px rgba(0,201,212,0.15);
+        }
+
+        .theme4 .item-stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .theme4 .item-stat-title {
+            font-size: 0.85rem;
+            color: #333;
+            line-height: 1.4;
+            flex: 1;
+            padding-right: 12px;
+            font-weight: 500;
+        }
+
+        .theme4 .item-stat-score {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .theme4 .item-stat-total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #00a0b0;
+        }
+
+        .theme4 .item-stat-avg {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .theme4 .item-stat-bar-bg {
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .theme4 .item-stat-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00c9d4 0%, #00d4aa 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .theme4 .item-stat-card:first-child .item-stat-bar {
+            background: linear-gradient(90deg, #d400a0 0%, #ff6b9d 100%);
+        }
+
+        .theme4 .item-stat-card:first-child .item-stat-total {
+            color: #d400a0;
+        }
+
+        .theme4 .detail-back-button {
+            margin: 16px;
+            padding: 16px;
+            background: white;
+            color: #00a0b0;
+            border: 2px solid #00c9d4;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: calc(100% - 32px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .theme4 .detail-back-button:hover {
+            background: linear-gradient(135deg, #00c9d4 0%, #00a0b0 100%);
+            color: white;
+            border-color: #00c9d4;
+        }
+
+        /* ===== フッター ===== */
+        .footer {
+            text-align: center;
+            padding: 32px 20px;
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        /* ===== レスポンシブ ===== */
+        @media (min-width: 768px) {
+            .tab-nav {
+                gap: 12px;
+            }
+
+            .tab-btn {
+                padding: 14px 32px;
+                font-size: 1rem;
+            }
+
+            .theme-content {
+                max-width: 480px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <h1>社員総会投票システム</h1>
+        <p>デザインテーマ選定 - 4つの候補からお選びください</p>
+    </header>
+
+    <!-- タブナビゲーション -->
+    <nav class="tab-nav">
+        <button class="tab-btn active" data-theme="1">Corporate Elegance</button>
+        <button class="tab-btn" data-theme="2">Vibrant Festival</button>
+        <button class="tab-btn" data-theme="3">Minimal Zen</button>
+        <button class="tab-btn" data-theme="4">Neon White</button>
+    </nav>
+
+    <!-- テーマ1: Corporate Elegance -->
+    <div class="theme-content active" id="theme1">
+        <div class="theme-info">
+            <h2>Corporate Elegance</h2>
+            <p>信頼感と品格を兼ね備えた企業らしいデザイン。落ち着いたネイビーを基調に、クリーンで見やすいレイアウトを実現。年配の方にも抵抗なく使えるUI。</p>
+            <div class="theme-features">
+                <span class="feature-tag">信頼感</span>
+                <span class="feature-tag">視認性重視</span>
+                <span class="feature-tag">落ち着いた配色</span>
+                <span class="feature-tag">全年齢対応</span>
+            </div>
+        </div>
+
+        <div class="page-toggle">
+            <button class="page-toggle-btn active" data-page="vote" data-target="theme1">投票画面</button>
+            <button class="page-toggle-btn" data-page="result" data-target="theme1">結果画面</button>
+        </div>
+
+        <div class="mockup-frame theme1">
+            <div class="mockup-screen">
+                <!-- 投票ページ -->
+                <div class="mockup-page vote active" id="theme1-vote">
+                    <div class="vote-header">
+                        <h1>2026年度 MVP部署投票</h1>
+                        <p>あなたの一票をお願いします</p>
+                    </div>
+                    <div class="vote-instruction">投票したい部署をタップしてください</div>
+                    <div class="card-grid">
+                        <div class="dept-card" onclick="toggleSelect(this)">
+                            <div class="dept-image">CC</div>
+                            <div class="dept-name">コンシューマー<br>カンパニー</div>
+                        </div>
+                        <div class="dept-card selected" onclick="toggleSelect(this)">
+                            <div class="dept-image">CS</div>
+                            <div class="dept-name">コーポレート<br>セールス</div>
+                        </div>
+                        <div class="dept-card" onclick="toggleSelect(this)">
+                            <div class="dept-image">SS</div>
+                            <div class="dept-name">SSD<br>カンパニー</div>
+                        </div>
+                        <div class="dept-card" onclick="toggleSelect(this)">
+                            <div class="dept-image">BB</div>
+                            <div class="dept-name">BBC</div>
+                        </div>
+                        <div class="dept-card" onclick="toggleSelect(this)">
+                            <div class="dept-image">UN</div>
+                            <div class="dept-name">Unneon</div>
+                        </div>
+                    </div>
+                    <button class="vote-button">投票する</button>
+                </div>
+
+                <!-- 結果ページ -->
+                <div class="mockup-page result" id="theme1-result">
+                    <div class="result-header">
+                        <h1>投票結果</h1>
+                        <div class="result-count">128<span> / 150名</span></div>
+                    </div>
+                    <div class="result-list">
+                        <div class="result-item winner">
+                            <div class="result-rank">1</div>
+                            <div class="result-info">
+                                <div class="result-name">コーポレートセールスカンパニー</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 85%"></div></div>
+                            </div>
+                            <div class="result-votes">42</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-rank">2</div>
+                            <div class="result-info">
+                                <div class="result-name">コンシューマーカンパニー</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 65%"></div></div>
+                            </div>
+                            <div class="result-votes">32</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-rank">3</div>
+                            <div class="result-info">
+                                <div class="result-name">SSDカンパニー</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 50%"></div></div>
+                            </div>
+                            <div class="result-votes">25</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-rank">4</div>
+                            <div class="result-info">
+                                <div class="result-name">BBC</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 35%"></div></div>
+                            </div>
+                            <div class="result-votes">18</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-rank">5</div>
+                            <div class="result-info">
+                                <div class="result-name">Unneon</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 22%"></div></div>
+                            </div>
+                            <div class="result-votes">11</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- テーマ2: Vibrant Festival -->
+    <div class="theme-content" id="theme2">
+        <div class="theme-info">
+            <h2>Vibrant Festival</h2>
+            <p>社員総会を盛り上げる華やかなグラデーションデザイン。お祭り感を演出し、投票体験を楽しいイベントに変える。結果発表時の視覚的インパクトも抜群。</p>
+            <div class="theme-features">
+                <span class="feature-tag">お祭り感</span>
+                <span class="feature-tag">華やかグラデーション</span>
+                <span class="feature-tag">インパクト大</span>
+                <span class="feature-tag">イベント向き</span>
+            </div>
+        </div>
+
+        <div class="page-toggle">
+            <button class="page-toggle-btn active" data-page="vote" data-target="theme2">投票画面</button>
+            <button class="page-toggle-btn" data-page="result" data-target="theme2">結果画面</button>
+        </div>
+
+        <div class="mockup-frame theme2">
+            <div class="mockup-screen">
+                <!-- 投票ページ -->
+                <div class="mockup-page vote active" id="theme2-vote">
+                    <div class="vote-header">
+                        <h1>2026年度 MVP部署投票</h1>
+                        <p>あなたの一票が勝敗を決める!</p>
+                    </div>
+                    <div class="vote-instruction">投票したい部署をタップ!</div>
+                    <div class="card-grid">
+                        <div class="dept-card" onclick="toggleSelect(this)">
+                            <div class="dept-image">CC</div>
+                            <div class="dept-name">コンシューマー<br>カンパニー</div>
+                        </div>
+                        <div class="dept-card selected" onclick="toggleSelect(this)">
+                            <div class="dept-image">CS</div>
+                            <div class="dept-name">コーポレート<br>セールス</div>
+                        </div>
+                        <div class="dept-card" onclick="toggleSelect(this)">
+                            <div class="dept-image">SS</div>
+                            <div class="dept-name">SSD<br>カンパニー</div>
+                        </div>
+                        <div class="dept-card" onclick="toggleSelect(this)">
+                            <div class="dept-image">BB</div>
+                            <div class="dept-name">BBC</div>
+                        </div>
+                        <div class="dept-card" onclick="toggleSelect(this)">
+                            <div class="dept-image">UN</div>
+                            <div class="dept-name">Unneon</div>
+                        </div>
+                    </div>
+                    <button class="vote-button">投票する!</button>
+                </div>
+
+                <!-- 結果ページ -->
+                <div class="mockup-page result" id="theme2-result">
+                    <div class="result-header">
+                        <h1>投票結果発表!</h1>
+                        <div class="result-count">128<span> / 150名</span></div>
+                    </div>
+                    <div class="result-list">
+                        <div class="result-item winner">
+                            <div class="result-rank">1</div>
+                            <div class="result-info">
+                                <div class="result-name">コーポレートセールスカンパニー</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 85%"></div></div>
+                            </div>
+                            <div class="result-votes">42</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-rank">2</div>
+                            <div class="result-info">
+                                <div class="result-name">コンシューマーカンパニー</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 65%"></div></div>
+                            </div>
+                            <div class="result-votes">32</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-rank">3</div>
+                            <div class="result-info">
+                                <div class="result-name">SSDカンパニー</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 50%"></div></div>
+                            </div>
+                            <div class="result-votes">25</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-rank">4</div>
+                            <div class="result-info">
+                                <div class="result-name">BBC</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 35%"></div></div>
+                            </div>
+                            <div class="result-votes">18</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-rank">5</div>
+                            <div class="result-info">
+                                <div class="result-name">Unneon</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 22%"></div></div>
+                            </div>
+                            <div class="result-votes">11</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- テーマ3: Minimal Zen -->
+    <div class="theme-content" id="theme3">
+        <div class="theme-info">
+            <h2>Minimal Zen</h2>
+            <p>究極のシンプルさを追求したミニマルデザイン。余計な装飾を排除し、投票という行為に集中できる禅的なUI。プロジェクターでの投影時も美しく映える。</p>
+            <div class="theme-features">
+                <span class="feature-tag">ミニマリズム</span>
+                <span class="feature-tag">高い可読性</span>
+                <span class="feature-tag">投影に最適</span>
+                <span class="feature-tag">洗練された印象</span>
+            </div>
+        </div>
+
+        <div class="page-toggle">
+            <button class="page-toggle-btn active" data-page="vote" data-target="theme3">投票画面</button>
+            <button class="page-toggle-btn" data-page="result" data-target="theme3">結果画面</button>
+        </div>
+
+        <div class="mockup-frame theme3">
+            <div class="mockup-screen">
+                <!-- 投票ページ -->
+                <div class="mockup-page vote active" id="theme3-vote">
+                    <div class="vote-header">
+                        <h1>MVP部署投票</h1>
+                        <p>2026</p>
+                    </div>
+                    <div class="vote-instruction">投票先を選択してください</div>
+                    <div class="card-grid">
+                        <div class="dept-card" onclick="toggleSelect(this)">
+                            <div class="dept-image">CC</div>
+                            <div class="dept-name">コンシューマーカンパニー</div>
+                        </div>
+                        <div class="dept-card selected" onclick="toggleSelect(this)">
+                            <div class="dept-image">CS</div>
+                            <div class="dept-name">コーポレートセールスカンパニー</div>
+                        </div>
+                        <div class="dept-card" onclick="toggleSelect(this)">
+                            <div class="dept-image">SS</div>
+                            <div class="dept-name">SSDカンパニー</div>
+                        </div>
+                        <div class="dept-card" onclick="toggleSelect(this)">
+                            <div class="dept-image">BB</div>
+                            <div class="dept-name">BBC</div>
+                        </div>
+                        <div class="dept-card" onclick="toggleSelect(this)">
+                            <div class="dept-image">UN</div>
+                            <div class="dept-name">Unneon</div>
+                        </div>
+                    </div>
+                    <button class="vote-button">Vote</button>
+                </div>
+
+                <!-- 結果ページ -->
+                <div class="mockup-page result" id="theme3-result">
+                    <div class="result-header">
+                        <h1>Result</h1>
+                        <div class="result-count">128<span> / 150</span></div>
+                    </div>
+                    <div class="result-list">
+                        <div class="result-item winner">
+                            <div class="result-rank">01</div>
+                            <div class="result-info">
+                                <div class="result-name">コーポレートセールスカンパニー</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 85%"></div></div>
+                            </div>
+                            <div class="result-votes">42</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-rank">02</div>
+                            <div class="result-info">
+                                <div class="result-name">コンシューマーカンパニー</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 65%"></div></div>
+                            </div>
+                            <div class="result-votes">32</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-rank">03</div>
+                            <div class="result-info">
+                                <div class="result-name">SSDカンパニー</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 50%"></div></div>
+                            </div>
+                            <div class="result-votes">25</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-rank">04</div>
+                            <div class="result-info">
+                                <div class="result-name">BBC</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 35%"></div></div>
+                            </div>
+                            <div class="result-votes">18</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-rank">05</div>
+                            <div class="result-info">
+                                <div class="result-name">Unneon</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 22%"></div></div>
+                            </div>
+                            <div class="result-votes">11</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- テーマ4: Neon White -->
+    <div class="theme-content" id="theme4">
+        <div class="theme-info">
+            <h2>Neon White</h2>
+            <p>清潔感のあるホワイトベースにネオンカラー（シアン＆マゼンタ）のアクセント。明るく爽やかでありながら、グラデーションで先進的な印象も演出。全年齢層に使いやすいモダンデザイン。</p>
+            <div class="theme-features">
+                <span class="feature-tag">ホワイトベース</span>
+                <span class="feature-tag">ネオンアクセント</span>
+                <span class="feature-tag">清潔感</span>
+                <span class="feature-tag">全年齢対応</span>
+            </div>
+        </div>
+
+        <div class="page-toggle">
+            <button class="page-toggle-btn active" data-page="eval" data-target="theme4">評価画面</button>
+            <button class="page-toggle-btn" data-page="result" data-target="theme4">結果画面</button>
+            <button class="page-toggle-btn" data-page="detail" data-target="theme4">項目詳細</button>
+        </div>
+
+        <div class="mockup-frame theme4">
+            <div class="mockup-screen">
+                <!-- 評価ページ -->
+                <div class="mockup-page eval active" id="theme4-eval">
+                    <div class="eval-header">
+                        <h1>カンパニー評価 2026</h1>
+                        <div class="current-dept" id="current-dept-name">コンシューマーカンパニー</div>
+                    </div>
+                    <div class="step-indicator">
+                        <div class="step active" id="step-1">
+                            <div class="step-number">1</div>
+                        </div>
+                        <span class="step-arrow">→</span>
+                        <div class="step" id="step-2">
+                            <div class="step-number">2</div>
+                        </div>
+                        <span class="step-arrow">→</span>
+                        <div class="step" id="step-3">
+                            <div class="step-number">3</div>
+                        </div>
+                        <span class="step-arrow">→</span>
+                        <div class="step" id="step-4">
+                            <div class="step-number">4</div>
+                        </div>
+                        <span class="step-arrow">→</span>
+                        <div class="step" id="step-5">
+                            <div class="step-number">5</div>
+                        </div>
+                        <span class="step-arrow">→</span>
+                        <div class="step" id="step-done">
+                            <div class="step-number">OK</div>
+                        </div>
+                    </div>
+                    <div class="eval-instruction">各項目を10段階で評価してください</div>
+                    <div class="eval-items">
+                        <!-- 評価項目1 -->
+                        <div class="eval-item">
+                            <div class="eval-item-title">1. 文化・制度の魅力度</div>
+                            <div class="rating-buttons" data-item="culture">
+                                <button class="rating-btn" data-value="1">1</button>
+                                <button class="rating-btn" data-value="2">2</button>
+                                <button class="rating-btn" data-value="3">3</button>
+                                <button class="rating-btn" data-value="4">4</button>
+                                <button class="rating-btn" data-value="5">5</button>
+                                <button class="rating-btn" data-value="6">6</button>
+                                <button class="rating-btn selected" data-value="7">7</button>
+                                <button class="rating-btn" data-value="8">8</button>
+                                <button class="rating-btn" data-value="9">9</button>
+                                <button class="rating-btn" data-value="10">10</button>
+                            </div>
+                            <div class="rating-label">
+                                <span>低い</span>
+                                <span>高い</span>
+                            </div>
+                        </div>
+                        <!-- 評価項目2 -->
+                        <div class="eval-item">
+                            <div class="eval-item-title">2. 未来への期待値（ワクワクしたか）</div>
+                            <div class="rating-buttons" data-item="future">
+                                <button class="rating-btn" data-value="1">1</button>
+                                <button class="rating-btn" data-value="2">2</button>
+                                <button class="rating-btn" data-value="3">3</button>
+                                <button class="rating-btn" data-value="4">4</button>
+                                <button class="rating-btn" data-value="5">5</button>
+                                <button class="rating-btn" data-value="6">6</button>
+                                <button class="rating-btn" data-value="7">7</button>
+                                <button class="rating-btn selected-high" data-value="8">8</button>
+                                <button class="rating-btn" data-value="9">9</button>
+                                <button class="rating-btn" data-value="10">10</button>
+                            </div>
+                            <div class="rating-label">
+                                <span>低い</span>
+                                <span>高い</span>
+                            </div>
+                        </div>
+                        <!-- 評価項目3 -->
+                        <div class="eval-item">
+                            <div class="eval-item-title">3. そのカンパニーに所属しているヒトの魅力を感じれたか</div>
+                            <div class="rating-buttons" data-item="people">
+                                <button class="rating-btn" data-value="1">1</button>
+                                <button class="rating-btn" data-value="2">2</button>
+                                <button class="rating-btn" data-value="3">3</button>
+                                <button class="rating-btn" data-value="4">4</button>
+                                <button class="rating-btn" data-value="5">5</button>
+                                <button class="rating-btn selected" data-value="6">6</button>
+                                <button class="rating-btn" data-value="7">7</button>
+                                <button class="rating-btn" data-value="8">8</button>
+                                <button class="rating-btn" data-value="9">9</button>
+                                <button class="rating-btn" data-value="10">10</button>
+                            </div>
+                            <div class="rating-label">
+                                <span>低い</span>
+                                <span>高い</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-group" id="eval-buttons">
+                        <button class="next-button" onclick="goToNextDept()">次の部署へ</button>
+                    </div>
+                </div>
+
+                <!-- 結果ページ -->
+                <div class="mockup-page result" id="theme4-result">
+                    <div class="result-header">
+                        <h1>EVALUATION RESULTS</h1>
+                        <div class="result-count">128<span>名が評価</span></div>
+                    </div>
+                    <div class="result-list">
+                        <div class="result-item winner clickable" onclick="showItemDetail('コーポレートセールスカンパニー', 2856)">
+                            <div class="result-rank">1</div>
+                            <div class="result-info">
+                                <div class="result-name">コーポレートセールスカンパニー</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 95%"></div></div>
+                            </div>
+                            <div class="result-votes">2856</div>
+                        </div>
+                        <div class="result-item clickable" onclick="showItemDetail('コンシューマーカンパニー', 2544)">
+                            <div class="result-rank">2</div>
+                            <div class="result-info">
+                                <div class="result-name">コンシューマーカンパニー</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 84%"></div></div>
+                            </div>
+                            <div class="result-votes">2544</div>
+                        </div>
+                        <div class="result-item clickable" onclick="showItemDetail('SSDカンパニー', 2280)">
+                            <div class="result-rank">3</div>
+                            <div class="result-info">
+                                <div class="result-name">SSDカンパニー</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 76%"></div></div>
+                            </div>
+                            <div class="result-votes">2280</div>
+                        </div>
+                        <div class="result-item clickable" onclick="showItemDetail('BBC', 2016)">
+                            <div class="result-rank">4</div>
+                            <div class="result-info">
+                                <div class="result-name">BBC</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 67%"></div></div>
+                            </div>
+                            <div class="result-votes">2016</div>
+                        </div>
+                        <div class="result-item clickable" onclick="showItemDetail('Unneon', 1824)">
+                            <div class="result-rank">5</div>
+                            <div class="result-info">
+                                <div class="result-name">Unneon</div>
+                                <div class="result-bar-bg"><div class="result-bar" style="width: 61%"></div></div>
+                            </div>
+                            <div class="result-votes">1824</div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; font-size: 0.75rem; color: #888; padding: 0 16px;">※ 各部署をタップすると項目別の詳細が見られます</p>
+                    <p style="text-align: center; font-size: 0.7rem; color: #aaa; padding: 8px 16px 16px;">総合得点 = 全評価者の3項目合計点の合計</p>
+                </div>
+
+                <!-- 項目別詳細ページ -->
+                <div class="mockup-page detail" id="theme4-detail">
+                    <div class="detail-header">
+                        <h1>Item Details</h1>
+                        <div class="dept-name-display" id="detail-dept-name">コーポレートセールスカンパニー</div>
+                        <div class="total-score">総合得点: <span id="detail-total-score">2856</span>点</div>
+                    </div>
+                    <div class="item-stats">
+                        <div class="item-stat-card">
+                            <div class="item-stat-header">
+                                <div class="item-stat-title">1. 文化・制度の魅力度</div>
+                                <div class="item-stat-score">
+                                    <div class="item-stat-total">1024</div>
+                                    <div class="item-stat-avg">平均 8.0</div>
+                                </div>
+                            </div>
+                            <div class="item-stat-bar-bg">
+                                <div class="item-stat-bar" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="item-stat-card">
+                            <div class="item-stat-header">
+                                <div class="item-stat-title">2. 未来への期待値（ワクワクしたか）</div>
+                                <div class="item-stat-score">
+                                    <div class="item-stat-total">960</div>
+                                    <div class="item-stat-avg">平均 7.5</div>
+                                </div>
+                            </div>
+                            <div class="item-stat-bar-bg">
+                                <div class="item-stat-bar" style="width: 94%"></div>
+                            </div>
+                        </div>
+                        <div class="item-stat-card">
+                            <div class="item-stat-header">
+                                <div class="item-stat-title">3. そのカンパニーに所属しているヒトの魅力を感じれたか</div>
+                                <div class="item-stat-score">
+                                    <div class="item-stat-total">872</div>
+                                    <div class="item-stat-avg">平均 6.8</div>
+                                </div>
+                            </div>
+                            <div class="item-stat-bar-bg">
+                                <div class="item-stat-bar" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="detail-back-button" onclick="backToResultPage()">
+                        <span>←</span> 結果一覧に戻る
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <p>社員総会投票システム デザインテーマ選定</p>
+    </footer>
+
+    <script>
+        // タブ切り替え
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // タブボタンのアクティブ状態を更新
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // テーマコンテンツの表示を切り替え
+                const themeId = 'theme' + btn.dataset.theme;
+                document.querySelectorAll('.theme-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(themeId).classList.add('active');
+            });
+        });
+
+        // ページ切り替え（投票/結果）
+        document.querySelectorAll('.page-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.target;
+                const page = btn.dataset.page;
+
+                // ページトグルボタンのアクティブ状態を更新
+                btn.parentElement.querySelectorAll('.page-toggle-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                btn.classList.add('active');
+
+                // モックアップページの表示を切り替え
+                const container = document.getElementById(target).querySelector('.mockup-screen');
+                container.querySelectorAll('.mockup-page').forEach(p => {
+                    p.classList.remove('active');
+                });
+                document.getElementById(target + '-' + page).classList.add('active');
+            });
+        });
+
+        // カード選択のトグル（デモ用）
+        function toggleSelect(card) {
+            const parent = card.closest('.card-grid');
+            parent.querySelectorAll('.dept-card').forEach(c => {
+                c.classList.remove('selected');
+            });
+            card.classList.add('selected');
+        }
+
+        // ===== テーマ4専用の機能（評価システム） =====
+        const deptList = [
+            'コンシューマーカンパニー',
+            'コーポレートセールスカンパニー',
+            'SSDカンパニー',
+            'BBC',
+            'Unneon'
+        ];
+        let currentDeptIndex = 0;
+
+        // 評価ボタンのクリック処理
+        document.querySelectorAll('.theme4 .rating-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const parent = this.closest('.rating-buttons');
+                parent.querySelectorAll('.rating-btn').forEach(b => {
+                    b.classList.remove('selected', 'selected-high');
+                });
+                const value = parseInt(this.dataset.value);
+                if (value >= 8) {
+                    this.classList.add('selected-high');
+                } else {
+                    this.classList.add('selected');
+                }
+            });
+        });
+
+        // ステップインジケーターを更新
+        function updateStepIndicator(stepIndex) {
+            for (let i = 1; i <= 5; i++) {
+                const step = document.getElementById('step-' + i);
+                step.classList.remove('active', 'completed');
+                if (i < stepIndex + 1) {
+                    step.classList.add('completed');
+                } else if (i === stepIndex + 1) {
+                    step.classList.add('active');
+                }
+            }
+            const doneStep = document.getElementById('step-done');
+            doneStep.classList.remove('active', 'completed');
+            if (stepIndex >= 5) {
+                doneStep.classList.add('active');
+            }
+        }
+
+        // 評価ボタン領域を更新（最後の部署では「送信」ボタンに変更）
+        function updateEvalButtons() {
+            const buttonGroup = document.getElementById('eval-buttons');
+            if (currentDeptIndex === 4) {
+                // 最後の部署
+                buttonGroup.innerHTML = `
+                    <button class="back-button" onclick="goToPrevDept()">戻る</button>
+                    <button class="submit-button" onclick="submitEvaluation()">送信</button>
+                `;
+            } else if (currentDeptIndex === 0) {
+                // 最初の部署
+                buttonGroup.innerHTML = `
+                    <button class="next-button" onclick="goToNextDept()">次の部署へ</button>
+                `;
+            } else {
+                // 中間の部署
+                buttonGroup.innerHTML = `
+                    <button class="back-button" onclick="goToPrevDept()">戻る</button>
+                    <button class="next-button" onclick="goToNextDept()">次の部署へ</button>
+                `;
+            }
+        }
+
+        // 次の部署へ
+        function goToNextDept() {
+            if (currentDeptIndex < 4) {
+                currentDeptIndex++;
+                document.getElementById('current-dept-name').textContent = deptList[currentDeptIndex];
+                updateStepIndicator(currentDeptIndex);
+                updateEvalButtons();
+            }
+        }
+
+        // 前の部署へ
+        function goToPrevDept() {
+            if (currentDeptIndex > 0) {
+                currentDeptIndex--;
+                document.getElementById('current-dept-name').textContent = deptList[currentDeptIndex];
+                updateStepIndicator(currentDeptIndex);
+                updateEvalButtons();
+            }
+        }
+
+        // 評価を送信（デモ：結果ページへ遷移）
+        function submitEvaluation() {
+            alert('全5部署の評価が完了しました！\n（デモ表示）');
+
+            const container = document.querySelector('#theme4 .mockup-screen');
+            container.querySelectorAll('.mockup-page').forEach(p => {
+                p.classList.remove('active');
+            });
+            document.getElementById('theme4-result').classList.add('active');
+
+            // ページトグルボタンも更新
+            const toggleBtns = document.querySelectorAll('#theme4 .page-toggle-btn');
+            toggleBtns.forEach(b => b.classList.remove('active'));
+            toggleBtns[1].classList.add('active');
+
+            // ステップを完了状態に
+            updateStepIndicator(5);
+        }
+
+        // 項目別詳細ページを表示
+        function showItemDetail(deptName, totalScore) {
+            document.getElementById('detail-dept-name').textContent = deptName;
+            document.getElementById('detail-total-score').textContent = totalScore;
+
+            const container = document.querySelector('#theme4 .mockup-screen');
+            container.querySelectorAll('.mockup-page').forEach(p => {
+                p.classList.remove('active');
+            });
+            document.getElementById('theme4-detail').classList.add('active');
+
+            // ページトグルボタンも更新
+            const toggleBtns = document.querySelectorAll('#theme4 .page-toggle-btn');
+            toggleBtns.forEach(b => b.classList.remove('active'));
+            toggleBtns[2].classList.add('active');
+        }
+
+        // 結果ページに戻る
+        function backToResultPage() {
+            const container = document.querySelector('#theme4 .mockup-screen');
+            container.querySelectorAll('.mockup-page').forEach(p => {
+                p.classList.remove('active');
+            });
+            document.getElementById('theme4-result').classList.add('active');
+
+            // ページトグルボタンも更新
+            const toggleBtns = document.querySelectorAll('#theme4 .page-toggle-btn');
+            toggleBtns.forEach(b => b.classList.remove('active'));
+            toggleBtns[1].classList.add('active');
+        }
+
+        // 評価画面に戻る（ページトグルボタン用）
+        function goToEvalPage() {
+            currentDeptIndex = 0;
+            document.getElementById('current-dept-name').textContent = deptList[0];
+            updateStepIndicator(0);
+            updateEvalButtons();
+
+            const container = document.querySelector('#theme4 .mockup-screen');
+            container.querySelectorAll('.mockup-page').forEach(p => {
+                p.classList.remove('active');
+            });
+            document.getElementById('theme4-eval').classList.add('active');
+
+            // ページトグルボタンも更新
+            const toggleBtns = document.querySelectorAll('#theme4 .page-toggle-btn');
+            toggleBtns.forEach(b => b.classList.remove('active'));
+            toggleBtns[0].classList.add('active');
+        }
+    </script>
+</body>
+</html>
