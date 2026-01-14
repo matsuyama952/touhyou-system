@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { theme } from './theme';
@@ -9,6 +10,17 @@ import { PAGE_ROUTES } from './types';
 import EvaluationPage from './pages/EvaluationPage';
 import ResultsPage from './pages/ResultsPage';
 import DepartmentDetailPage from './pages/DepartmentDetailPage';
+
+// ページ遷移時に自動スクロール
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 // React Query クライアント
 const queryClient = new QueryClient({
@@ -32,7 +44,8 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <VoteGuardProvider>
-          <BrowserRouter>
+          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <ScrollToTop />
             <Routes>
               {/* P-001: 評価ページ */}
               <Route path={PAGE_ROUTES.EVALUATION} element={<EvaluationPage />} />

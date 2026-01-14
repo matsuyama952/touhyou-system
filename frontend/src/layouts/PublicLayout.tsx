@@ -23,7 +23,7 @@ export function PublicLayout({
   showHeader = true,
   maxWidth = 'sm',
   centerContent = false,
-  title = '社員総会評価システム',
+  title = '投票',
 }: PublicLayoutProps) {
   return (
     <Box
@@ -44,10 +44,11 @@ export function PublicLayout({
         >
           <Toolbar>
             <Typography
-              variant="h6"
+              variant="h4"
               component="h1"
               sx={{
-                flexGrow: 1,
+                width: '100%',
+                textAlign: 'center',
                 fontWeight: 700,
                 color: 'common.white',
                 textShadow: '0 2px 4px rgba(0,0,0,0.1)',

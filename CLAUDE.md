@@ -16,8 +16,8 @@
 
 ```yaml
 ポート設定:
-  frontend: 3247
-  backend: Vercel Functions (ローカル: 3000)
+  frontend: 3248
+  backend: Express Server (ローカル: 3002)
 
 環境変数:
   設定ファイル: .env.local（ルートディレクトリ）

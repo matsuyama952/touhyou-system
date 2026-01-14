@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P-001: 評価ページ - モックアップ</title>
+  <style>
+    /* ===== Neon White テーマ ===== */
+    :root {
+      --primary-main: #00D4FF;
+      --primary-light: #66E5FF;
+      --primary-dark: #00A3CC;
+      --secondary-main: #FF0080;
+      --secondary-light: #FF4DA6;
+      --background-default: #FAFAFA;
+      --background-paper: #FFFFFF;
+      --text-primary: #1A1A1A;
+      --text-secondary: #666666;
+      --text-disabled: #AAAAAA;
+      --success: #00E676;
+      --neon-glow-cyan: 0 0 20px rgba(0, 212, 255, 0.5);
+      --neon-glow-magenta: 0 0 20px rgba(255, 0, 128, 0.5);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', 'Noto Sans JP', sans-serif;
+      background-color: var(--background-default);
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    /* ===== レイアウト ===== */
+    .layout {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: var(--background-paper);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      padding: 16px;
+      text-align: center;
+    }
+
+    .header-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--primary-main) 0%, var(--secondary-main) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .main {
+      flex: 1;
+      padding: 16px;
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ===== イントロ画面 ===== */
+    .intro-section {
+      text-align: center;
+    }
+
+    .intro-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text-primary);
+    }
+
+    .flow-section {
+      background: var(--background-paper);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .flow-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .flow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .flow-step-number {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--primary-main) 0%, var(--secondary-main) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #FFFFFF;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+    }
+
+    .flow-step-text {
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    .criteria-section {
+      background: var(--background-paper);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .criteria-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .criteria-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .criteria-card {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(255, 0, 128, 0.05) 100%);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: left;
+    }
+
+    .criteria-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .criteria-card-description {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===== プログレスバー ===== */
+    .progress-section {
+      margin-bottom: 24px;
+    }
+
+    .progress-text {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-main) 0%, var(--secondary-main) 100%);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    /* ===== 部署カード ===== */
+    .department-card {
+      background: var(--background-paper);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .department-image {
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 0, 128, 0.1) 100%);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-disabled);
+      font-size: 0.875rem;
+    }
+
+    .department-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .department-number {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    /* ===== 評価セクション ===== */
+    .evaluation-section {
+      margin-top: 24px;
+    }
+
+    .criteria-item {
+      background: var(--background-paper);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .criteria-name {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .score-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .score-button {
+      width: 44px;
+      height: 44px;
+      border: 2px solid rgba(0, 0, 0, 0.12);
+      border-radius: 50%;
+      background: var(--background-paper);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .score-button:hover {
+      border-color: var(--primary-main);
+      background: rgba(0, 212, 255, 0.08);
+    }
+
+    .score-button.selected {
+      border-color: var(--primary-main);
+      background: var(--primary-main);
+      color: #0A0A0A;
+      box-shadow: var(--neon-glow-cyan);
+    }
+
+    .score-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===== ボタン ===== */
+    .button-section {
+      margin-top: 24px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 16px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary-main);
+      color: #0A0A0A;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      box-shadow: var(--neon-glow-cyan);
+    }
+
+    .btn-primary:disabled {
+      background: var(--text-disabled);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 2px solid rgba(0, 0, 0, 0.12);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--text-secondary);
+    }
+
+    .btn-submit {
+      background: var(--secondary-main);
+      color: #FFFFFF;
+    }
+
+    .btn-submit:hover {
+      background: var(--secondary-light);
+      box-shadow: var(--neon-glow-magenta);
+    }
+
+    .btn-start {
+      width: 100%;
+      padding: 18px 24px;
+      font-size: 1.125rem;
+    }
+
+    /* ===== 確認画面 ===== */
+    .confirmation-card {
+      background: var(--background-paper);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .confirmation-header {
+      font-size: 1.25rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .summary-item {
+      padding: 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .summary-item:last-child {
+      border-bottom: none;
+    }
+
+    .summary-department {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .summary-scores {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .summary-score-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .summary-score-value {
+      font-weight: 600;
+      color: var(--primary-main);
+    }
+
+    /* ===== 完了画面 ===== */
+    .completion-card {
+      background: var(--background-paper);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      padding: 48px 24px;
+      text-align: center;
+    }
+
+    .completion-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--success);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 2.5rem;
+      color: #FFFFFF;
+    }
+
+    .completion-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .completion-message {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    /* ===== 状態切り替え用 ===== */
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    /* ===== タブ切り替えUI（デモ用） ===== */
+    .demo-tabs {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--background-paper);
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      padding: 8px;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .demo-tab {
+      padding: 8px 12px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 8px;
+      background: var(--background-paper);
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+
+    .demo-tab.active {
+      background: var(--primary-main);
+      border-color: var(--primary-main);
+      color: #0A0A0A;
+    }
+
+    /* 下部余白（デモタブ用） */
+    .main {
+      padding-bottom: 80px;
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <header class="header">
+      <h1 class="header-title">社員総会 投票</h1>
+    </header>
+
+    <main class="main">
+      <!-- ===== 画面0: イントロ画面 ===== -->
+      <div id="screen-intro" class="screen active">
+        <div class="intro-section">
+          <h2 class="intro-title">各部署の発表を評価してください</h2>
+
+          <!-- 投票の流れ -->
+          <div class="flow-section">
+            <h3 class="flow-title">投票の流れ</h3>
+            <div class="flow-steps">
+              <div class="flow-step">
+                <span class="flow-step-number">1</span>
+                <span class="flow-step-text">5部署を順番に評価</span>
+              </div>
+              <div class="flow-step">
+                <span class="flow-step-number">2</span>
+                <span class="flow-step-text">内容を確認</span>
+              </div>
+              <div class="flow-step">
+                <span class="flow-step-number">3</span>
+                <span class="flow-step-text">送信して完了</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 評価項目の説明 -->
+          <div class="criteria-section">
+            <h3 class="criteria-title">3つの評価項目</h3>
+            <div class="criteria-cards">
+              <div class="criteria-card">
+                <p class="criteria-card-title">文化・制度の魅力度</p>
+                <p class="criteria-card-description">働きやすさや制度の魅力を感じたか</p>
+              </div>
+              <div class="criteria-card">
+                <p class="criteria-card-title">未来への期待値</p>
+                <p class="criteria-card-description">ワクワクしたか</p>
+              </div>
+              <div class="criteria-card">
+                <p class="criteria-card-title">ヒトの魅力</p>
+                <p class="criteria-card-description">所属する人の魅力を感じられたか</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 投票開始ボタン -->
+          <button class="btn btn-primary btn-start" onclick="showScreen('evaluation')">
+            投票を始める
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== 画面1: 評価画面 ===== -->
+      <div id="screen-evaluation" class="screen">
+        <!-- プログレス -->
+        <div class="progress-section">
+          <p class="progress-text">1 / 5 部署</p>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 20%"></div>
+          </div>
+        </div>
+
+        <!-- 部署カード -->
+        <div class="department-card">
+          <div class="department-image">
+            部署画像
+          </div>
+          <h2 class="department-name">コンシューマーカンパニー</h2>
+          <p class="department-number">1番目の部署</p>
+        </div>
+
+        <!-- 評価セクション -->
+        <div class="evaluation-section">
+          <!-- 評価項目1 -->
+          <div class="criteria-item">
+            <h3 class="criteria-name">1. 文化・制度の魅力度</h3>
+            <div class="score-selector">
+              <button class="score-button">1</button>
+              <button class="score-button">2</button>
+              <button class="score-button">3</button>
+              <button class="score-button">4</button>
+              <button class="score-button">5</button>
+              <button class="score-button">6</button>
+              <button class="score-button selected">7</button>
+              <button class="score-button">8</button>
+              <button class="score-button">9</button>
+              <button class="score-button">10</button>
+            </div>
+            <div class="score-labels">
+              <span>低い</span>
+              <span>高い</span>
+            </div>
+          </div>
+
+          <!-- 評価項目2 -->
+          <div class="criteria-item">
+            <h3 class="criteria-name">2. 未来への期待値（ワクワクしたか）</h3>
+            <div class="score-selector">
+              <button class="score-button">1</button>
+              <button class="score-button">2</button>
+              <button class="score-button">3</button>
+              <button class="score-button">4</button>
+              <button class="score-button">5</button>
+              <button class="score-button">6</button>
+              <button class="score-button">7</button>
+              <button class="score-button selected">8</button>
+              <button class="score-button">9</button>
+              <button class="score-button">10</button>
+            </div>
+            <div class="score-labels">
+              <span>低い</span>
+              <span>高い</span>
+            </div>
+          </div>
+
+          <!-- 評価項目3 -->
+          <div class="criteria-item">
+            <h3 class="criteria-name">3. そのカンパニーに所属しているヒトの魅力を感じれたか</h3>
+            <div class="score-selector">
+              <button class="score-button">1</button>
+              <button class="score-button">2</button>
+              <button class="score-button">3</button>
+              <button class="score-button">4</button>
+              <button class="score-button">5</button>
+              <button class="score-button">6</button>
+              <button class="score-button">7</button>
+              <button class="score-button">8</button>
+              <button class="score-button selected">9</button>
+              <button class="score-button">10</button>
+            </div>
+            <div class="score-labels">
+              <span>低い</span>
+              <span>高い</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ボタン -->
+        <div class="button-section">
+          <button class="btn btn-secondary" onclick="showScreen('intro')">戻る</button>
+          <button class="btn btn-primary">次の部署へ</button>
+        </div>
+      </div>
+
+      <!-- ===== 画面2: 確認画面 ===== -->
+      <div id="screen-confirmation" class="screen">
+        <div class="confirmation-card">
+          <h2 class="confirmation-header">評価内容の確認</h2>
+
+          <div class="summary-item">
+            <p class="summary-department">1. コンシューマーカンパニー</p>
+            <div class="summary-scores">
+              <div class="summary-score-row">
+                <span>文化・制度の魅力度</span>
+                <span class="summary-score-value">7点</span>
+              </div>
+              <div class="summary-score-row">
+                <span>未来への期待値</span>
+                <span class="summary-score-value">8点</span>
+              </div>
+              <div class="summary-score-row">
+                <span>ヒトの魅力</span>
+                <span class="summary-score-value">9点</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <p class="summary-department">2. コーポレートセールスカンパニー</p>
+            <div class="summary-scores">
+              <div class="summary-score-row">
+                <span>文化・制度の魅力度</span>
+                <span class="summary-score-value">6点</span>
+              </div>
+              <div class="summary-score-row">
+                <span>未来への期待値</span>
+                <span class="summary-score-value">7点</span>
+              </div>
+              <div class="summary-score-row">
+                <span>ヒトの魅力</span>
+                <span class="summary-score-value">8点</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <p class="summary-department">3. SSDカンパニー</p>
+            <div class="summary-scores">
+              <div class="summary-score-row">
+                <span>文化・制度の魅力度</span>
+                <span class="summary-score-value">8点</span>
+              </div>
+              <div class="summary-score-row">
+                <span>未来への期待値</span>
+                <span class="summary-score-value">9点</span>
+              </div>
+              <div class="summary-score-row">
+                <span>ヒトの魅力</span>
+                <span class="summary-score-value">7点</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <p class="summary-department">4. BBC</p>
+            <div class="summary-scores">
+              <div class="summary-score-row">
+                <span>文化・制度の魅力度</span>
+                <span class="summary-score-value">7点</span>
+              </div>
+              <div class="summary-score-row">
+                <span>未来への期待値</span>
+                <span class="summary-score-value">6点</span>
+              </div>
+              <div class="summary-score-row">
+                <span>ヒトの魅力</span>
+                <span class="summary-score-value">8点</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="summary-item">
+            <p class="summary-department">5. Unneon</p>
+            <div class="summary-scores">
+              <div class="summary-score-row">
+                <span>文化・制度の魅力度</span>
+                <span class="summary-score-value">9点</span>
+              </div>
+              <div class="summary-score-row">
+                <span>未来への期待値</span>
+                <span class="summary-score-value">10点</span>
+              </div>
+              <div class="summary-score-row">
+                <span>ヒトの魅力</span>
+                <span class="summary-score-value">8点</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ボタン -->
+        <div class="button-section">
+          <button class="btn btn-secondary">戻って修正</button>
+          <button class="btn btn-submit" onclick="showScreen('completion')">評価を送信</button>
+        </div>
+      </div>
+
+      <!-- ===== 画面3: 完了画面 ===== -->
+      <div id="screen-completion" class="screen">
+        <div class="completion-card">
+          <div class="completion-icon">
+            ✓
+          </div>
+          <h2 class="completion-title">投票完了</h2>
+          <p class="completion-message">
+            ご投票ありがとうございました。<br>
+            結果は結果表示ページでご確認いただけます。
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- デモ用タブ切り替え -->
+  <div class="demo-tabs">
+    <button class="demo-tab active" onclick="showScreen('intro')">イントロ</button>
+    <button class="demo-tab" onclick="showScreen('evaluation')">評価</button>
+    <button class="demo-tab" onclick="showScreen('confirmation')">確認</button>
+    <button class="demo-tab" onclick="showScreen('completion')">完了</button>
+  </div>
+
+  <script>
+    // デモ用：画面切り替え
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+
+      document.getElementById('screen-' + screenId).classList.add('active');
+
+      // タブのアクティブ状態を更新
+      const tabs = document.querySelectorAll('.demo-tab');
+      const tabIndex = ['intro', 'evaluation', 'confirmation', 'completion'].indexOf(screenId);
+      if (tabIndex >= 0 && tabs[tabIndex]) {
+        tabs[tabIndex].classList.add('active');
+      }
+    }
+
+    // デモ用：スコアボタン選択
+    document.querySelectorAll('.score-selector').forEach(selector => {
+      selector.addEventListener('click', (e) => {
+        if (e.target.classList.contains('score-button')) {
+          selector.querySelectorAll('.score-button').forEach(btn => btn.classList.remove('selected'));
+          e.target.classList.add('selected');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

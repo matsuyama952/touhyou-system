@@ -8,7 +8,6 @@ import {
   AlertTitle,
   Paper,
   Button,
-  Grid,
   Card,
   CardContent,
   CardActionArea,
@@ -97,6 +96,10 @@ function ResultsPage() {
     targetEvaluators: 150,
   };
 
+  // デバッグ: 取得データを確認
+  console.log('=== Results Data ===');
+  console.log('results:', JSON.stringify(results, null, 2));
+
   // 最高得点を取得（グラフのスケーリング用）
   const maxScore = Math.max(...results.map((r) => r.totalScore), 1);
 
@@ -115,13 +118,16 @@ function ResultsPage() {
           </Typography>
         </Paper>
       ) : (
-        <Grid container spacing={3}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {results.map((result, index) => {
             const isFirst = result.rank === 1;
             const barWidth = (result.totalScore / maxScore) * 100;
 
+            // デバッグ: 各カードのデータを確認
+            console.log(`Card ${index + 1}: ${result.departmentName} - ${result.totalScore}点`);
+
             return (
-              <Grid size={12} key={result.departmentId}>
+              <Box key={result.departmentId}>
                 <Card
                   sx={{
                     ...(isFirst && {
@@ -196,10 +202,10 @@ function ResultsPage() {
                     </CardContent>
                   </CardActionArea>
                 </Card>
-              </Grid>
+              </Box>
             );
           })}
-        </Grid>
+        </Box>
       )}
     </ResultsLayout>
   );
