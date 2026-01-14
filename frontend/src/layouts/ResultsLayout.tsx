@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react';
-import { Box, Container, AppBar, Toolbar, Typography, LinearProgress, Chip } from '@mui/material';
-import PeopleIcon from '@mui/icons-material/People';
-import { gradients } from '../theme';
+import { Box, Container, Typography } from '@mui/material';
 
 interface ResultsLayoutProps {
   children: ReactNode;
@@ -9,100 +7,111 @@ interface ResultsLayoutProps {
   title?: string;
   /** 評価済み人数 */
   totalEvaluators?: number;
-  /** 対象者数 */
-  targetEvaluators?: number;
-  /** 読み込み中 */
-  isLoading?: boolean;
 }
+
+// 高級デザイン用カラーパレット（スクリーン投影用）
+const luxuryColors = {
+  background: '#F5F5F5',
+  backgroundAlt: '#FAF9F7',
+  text: '#000000',
+  textSecondary: '#333333',
+  gold: '#D4AF37',
+  goldLight: '#E8D5A3',
+  border: '#CCCCCC',
+};
 
 /**
  * 結果表示ページ用レイアウト
- * 大画面投影を想定したレイアウト
+ * スクリーン投影用・60m離れても見やすい大きなデザイン
  */
 export function ResultsLayout({
   children,
   title = '評価結果',
   totalEvaluators = 0,
-  targetEvaluators = 150,
-  isLoading = false,
 }: ResultsLayoutProps) {
-  const progressPercent = targetEvaluators > 0
-    ? Math.min((totalEvaluators / targetEvaluators) * 100, 100)
-    : 0;
-
   return (
     <Box
       sx={{
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        background: gradients.softWhite,
+        bgcolor: luxuryColors.background,
       }}
     >
-      <AppBar
-        position="sticky"
-        elevation={0}
+      {/* ヘッダー - スクリーン投影用大きめ */}
+      <Box
+        component="header"
         sx={{
-          background: gradients.neonPrimary,
+          borderBottom: `2px solid ${luxuryColors.border}`,
+          bgcolor: luxuryColors.backgroundAlt,
+          py: 5,
         }}
       >
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <Typography
-            variant="h5"
-            component="h1"
-            sx={{
-              fontWeight: 700,
-              color: 'common.white',
-              textShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            }}
-          >
-            {title}
-          </Typography>
-
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Chip
-              icon={<PeopleIcon />}
-              label={`${totalEvaluators} / ${targetEvaluators} 名`}
+        <Container maxWidth="xl">
+          <Box sx={{ textAlign: 'center', mb: 4 }}>
+            {/* ゴールドのアクセントライン */}
+            <Box
               sx={{
-                bgcolor: 'rgba(255,255,255,0.2)',
-                color: 'common.white',
-                fontWeight: 600,
-                fontSize: '1rem',
-                height: 40,
-                '& .MuiChip-icon': {
-                  color: 'common.white',
-                },
+                width: 100,
+                height: 2,
+                bgcolor: luxuryColors.gold,
+                mx: 'auto',
+                mb: 3,
+              }}
+            />
+            <Typography
+              variant="h1"
+              component="h1"
+              sx={{
+                fontFamily: '"Playfair Display", "Times New Roman", serif',
+                fontWeight: 500,
+                color: luxuryColors.text,
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                fontSize: { xs: '2.5rem', md: '4rem' },
+              }}
+            >
+              {title}
+            </Typography>
+            <Box
+              sx={{
+                width: 100,
+                height: 2,
+                bgcolor: luxuryColors.gold,
+                mx: 'auto',
+                mt: 3,
               }}
             />
           </Box>
-        </Toolbar>
 
-        {/* 評価進捗バー */}
-        <Box sx={{ px: 2, pb: 1 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 0.5 }}>
-            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.8)' }}>
-              評価進捗
+          {/* 評価人数 */}
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography
+              sx={{
+                fontFamily: '"Playfair Display", serif',
+                color: luxuryColors.gold,
+                fontWeight: 600,
+                fontSize: '5rem',
+              }}
+            >
+              {totalEvaluators}
             </Typography>
-            <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.8)' }}>
-              {progressPercent.toFixed(0)}%
+            <Typography
+              sx={{
+                fontFamily: '"Playfair Display", serif',
+                color: luxuryColors.textSecondary,
+                letterSpacing: '0.2em',
+                fontSize: '1.5rem',
+                mt: 1,
+              }}
+            >
+              EVALUATORS
             </Typography>
           </Box>
-          <LinearProgress
-            variant={isLoading ? 'indeterminate' : 'determinate'}
-            value={progressPercent}
-            sx={{
-              height: 8,
-              borderRadius: 4,
-              bgcolor: 'rgba(255,255,255,0.2)',
-              '& .MuiLinearProgress-bar': {
-                bgcolor: 'common.white',
-                borderRadius: 4,
-              },
-            }}
-          />
-        </Box>
-      </AppBar>
+        </Container>
+      </Box>
 
+      {/* メインコンテンツ */}
       <Box
         component="main"
         sx={{
@@ -112,14 +121,35 @@ export function ResultsLayout({
         }}
       >
         <Container
-          maxWidth="lg"
+          maxWidth="xl"
           sx={{
-            py: 3,
+            py: 6,
             flexGrow: 1,
           }}
         >
           {children}
         </Container>
+      </Box>
+
+      {/* フッター */}
+      <Box
+        component="footer"
+        sx={{
+          borderTop: `2px solid ${luxuryColors.border}`,
+          py: 4,
+          textAlign: 'center',
+        }}
+      >
+        <Typography
+          sx={{
+            color: luxuryColors.textSecondary,
+            letterSpacing: '0.15em',
+            fontFamily: '"Playfair Display", serif',
+            fontSize: '1.2rem',
+          }}
+        >
+          VOTING SYSTEM
+        </Typography>
       </Box>
     </Box>
   );

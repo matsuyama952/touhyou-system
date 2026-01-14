@@ -14,22 +14,44 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       orderBy: { displayOrder: 'asc' },
     });
 
-    // 各部署の総合得点を集計
+    // 評価項目一覧取得
+    const criteria = await prisma.evaluationCriteria.findMany({
+      where: { isActive: true },
+      orderBy: { displayOrder: 'asc' },
+    });
+
+    // 各部署の総合得点と項目別得点を集計
     const results = await Promise.all(
       departments.map(async (dept) => {
-        const aggregation = await prisma.evaluation.aggregate({
-          where: {
-            departmentId: dept.id,
-            eventYear,
-          },
-          _sum: { score: true },
-        });
+        // 項目別の集計
+        const criteriaResults = await Promise.all(
+          criteria.map(async (crit) => {
+            const aggregation = await prisma.evaluation.aggregate({
+              where: {
+                departmentId: dept.id,
+                criteriaId: crit.id,
+                eventYear,
+              },
+              _sum: { score: true },
+            });
+
+            return {
+              criteriaId: crit.id,
+              criteriaName: crit.name,
+              totalPoints: aggregation._sum.score || 0,
+            };
+          })
+        );
+
+        // 総合得点を計算
+        const totalScore = criteriaResults.reduce((sum, cr) => sum + cr.totalPoints, 0);
 
         return {
           departmentId: dept.id,
           departmentName: dept.name,
           imageUrl: dept.imageUrl,
-          totalScore: aggregation._sum.score || 0,
+          totalScore,
+          criteriaResults,
         };
       })
     );
@@ -53,8 +75,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       where: { year: eventYear, isActive: true },
     });
 
+    // 評価項目のヘッダー情報（短縮名）
+    const criteriaHeaders = criteria.map((c) => ({
+      id: c.id,
+      name: c.name.split('（')[0].split('\n')[0], // 短縮名を取得
+    }));
+
     return res.status(200).json({
       results: sortedResults,
+      criteriaHeaders,
       totalEvaluators: evaluatorCount.length,
       targetEvaluators: eventConfig?.targetEvaluators || 100,
     });

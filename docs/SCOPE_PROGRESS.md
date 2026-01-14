@@ -2,11 +2,11 @@
 
 ## 1. 基本情報
 
-- **ステータス**: バックエンド基盤構築完了
+- **ステータス**: 本番デプロイ準備中
 - **完了タスク数**: 5/6
-- **進捗率**: 83%
-- **次のマイルストーン**: データベース接続・デプロイ
-- **最終更新日**: 2026-01-10
+- **進捗率**: 95%
+- **次のマイルストーン**: Vercelデプロイ完了
+- **最終更新日**: 2026-01-14
 
 ---
 
@@ -16,11 +16,11 @@
 |-------|------|------|
 | Phase 1 | 要件定義 | [x] 完了 |
 | Phase 2 | Git/GitHub管理 | [x] 完了 |
-| Phase 2.5 | デザインテーマ選定 | [x] 完了（Neon White） |
+| Phase 2.5 | デザインテーマ選定 | [x] 完了（Luxury Gold） |
 | Phase 3 | フロントエンド基盤 | [x] 完了 |
 | Phase 4 | バックエンド基盤 | [x] 完了 |
 | Phase 5 | ページ実装 | [x] 完了 |
-| Phase 6 | デプロイ | [ ] 未着手 |
+| Phase 6 | デプロイ | [🔄] 進行中 |
 
 ---
 
@@ -40,14 +40,14 @@
 ### ページ構成
 | ID | ページ名 | ルート | 機能 | 着手 | 完了 |
 |----|---------|-------|------|------|------|
-| P-001 | 評価ページ | `/` | 全5部署を3項目×10段階で評価、二重評価防止 | [x] | [x] |
-| P-002 | 結果表示ページ | `/results` | 総合得点の棒グラフ、リアルタイム更新、1位ハイライト、部署クリックで詳細へ | [x] | [x] |
-| P-003 | 項目別詳細ページ | `/results/:departmentId` | 部署別の評価項目別得点表示 | [x] | [x] |
+| P-001 | 評価ページ | `/` | 全4カンパニーを4項目×8段階で評価、二重評価防止 | [x] | [x] |
+| P-002 | 結果表示ページ | `/results` | 項目別得点テーブル、カウントアップ演出、シール開封演出、リアルタイム更新 | [x] | [x] |
+| P-003 | 項目別詳細ページ | `/results/:departmentId` | カンパニー別の評価項目別得点表示 | [x] | [x] |
 
 ### 技術スタック
 | 層 | 技術 |
 |----|------|
-| フロントエンド | React 18 + TypeScript 5 + MUI v6 + Vite 5 |
+| フロントエンド | React 19 + TypeScript 5 + MUI v7 + Vite 5 |
 | バックエンド | Vercel Functions (Node.js) |
 | データベース | Neon (PostgreSQL) + Prisma |
 | 画像ストレージ | Cloudinary |
@@ -56,12 +56,19 @@
 ### API エンドポイント
 | エンドポイント | メソッド | 用途 |
 |---------------|---------|------|
-| `/api/departments` | GET | 部署一覧取得 |
+| `/api/departments` | GET | カンパニー一覧取得 |
 | `/api/criteria` | GET | 評価項目一覧取得（DBから動的） |
-| `/api/vote` | POST | 評価送信（部署ID×項目ID×点数の配列） |
-| `/api/results` | GET | 評価結果取得（部署別総合得点） |
+| `/api/vote` | POST | 評価送信（カンパニーID×項目ID×点数の配列） |
+| `/api/results` | GET | 評価結果取得（カンパニー別・項目別得点） |
 | `/api/results/:departmentId` | GET | 項目別評価結果取得 |
 | `/api/health` | GET | ヘルスチェック |
+
+### データ構成
+| 項目 | 内容 |
+|------|------|
+| カンパニー数 | 4件（コンシューマー、コーポレートセールス、SSD、BBC） |
+| 評価項目数 | 4件（Philosophy、Profession、People、Privilege） |
+| スコア範囲 | 1〜8点 |
 
 ---
 
@@ -78,7 +85,7 @@ frontend/src/
 │   ├── PublicLayout.tsx        # 公開ページ用
 │   └── ResultsLayout.tsx       # 結果表示用（大画面投影向け）
 ├── components/         # 共通コンポーネント
-├── theme/              # MUIテーマ（Neon White）
+├── theme/              # MUIテーマ（Luxury Gold）
 │   ├── index.ts
 │   ├── palette.ts
 │   ├── typography.ts
@@ -96,18 +103,27 @@ frontend/src/
 ```
 
 ### 実装済み機能
-- MUIテーマシステム（Neon White: シアン/マゼンタのネオンカラー）
+- MUIテーマシステム（Luxury Gold: 高級ファッション風ゴールドテーマ）
 - 二重評価防止システム（FingerprintJS + localStorage）
 - レイアウトシステム（PublicLayout, ResultsLayout）
 - ルーティングシステム（React Router v6）
 - 型定義とAPIパスの一元管理
-- 基本ページ骨格（バックエンド接続待ち状態）
+- 結果表示演出（カウントアップ、シール開封）
+
+### デザイン仕様
+| 項目 | 値 |
+|------|-----|
+| 背景色 | #F5F5F5 (ライトグレー) |
+| テキスト | #000000 (ブラック) |
+| アクセント | #D4AF37 (ゴールド) |
+| フォント | Playfair Display (セリフ体) |
+| スタイル | 高級ファッションブランド風 |
 
 ### 開発サーバー
 ```bash
 cd frontend
 npm run dev
-# http://localhost:3247
+# http://localhost:3248
 ```
 
 ### 品質チェック結果
@@ -144,8 +160,8 @@ npm run dev
 
 ### データベーススキーマ
 ```
-departments        - 部署テーブル（5部署）
-evaluation_criteria - 評価項目テーブル（3項目）
+departments        - カンパニーテーブル（4カンパニー）
+evaluation_criteria - 評価項目テーブル（4項目）
 evaluations        - 評価データテーブル（投票記録）
 event_configs      - イベント設定テーブル（年度別設定）
 ```
@@ -179,7 +195,7 @@ npx prisma db push
 npm run db:seed
 
 # 6. 開発サーバー起動
-npm run dev
+npm run api
 ```
 
 ---
@@ -190,7 +206,6 @@ npm run dev
 |---------|------|------|
 | 要件定義書 | `docs/requirements.md` | 詳細要件 |
 | API仕様書 | `docs/api-specs/evaluation-page-api.md` | P-001 API仕様 |
-| デザインテーマ選定 | `mockups/design-theme-selector.html` | 4つのデザインテーマ候補 |
 | CLAUDE.md | `CLAUDE.md` | コーディング規約 |
 | ESLint設定 | `eslint.config.js` | Lint設定 |
 | Prettier設定 | `.prettierrc` | フォーマット設定 |
@@ -203,20 +218,28 @@ npm run dev
 
 ## 7. 次のステップ
 
-**Phase 6: デプロイ** を開始してください。
+**Phase 6: デプロイ** を進行中です。
 
-### 必要な作業
-1. Neonでデータベース作成
-2. `.env.local`に接続情報を設定
-3. `npx prisma db push`でスキーマ適用
-4. `npm run db:seed`で初期データ投入
-5. Vercelにデプロイ
+### 完了済み
+- [x] Neonでデータベース作成
+- [x] `.env.local`に接続情報を設定
+- [x] `npx prisma db push`でスキーマ適用
+- [x] `npm run db:seed`で初期データ投入
+- [x] Vercelにログイン
+
+### 進行中
+- [🔄] Vercelにデプロイ
+
+### デプロイコマンド
+```bash
+npx vercel --prod
+```
 
 ### 外部サービスアカウント
-| サービス | 用途 | 作成URL |
-|---------|------|---------|
-| Neon | PostgreSQL DB | https://console.neon.tech |
-| Cloudinary | 画像ストレージ | https://cloudinary.com |
-| Vercel | ホスティング | https://vercel.com |
+| サービス | 用途 | 状態 |
+|---------|------|------|
+| Neon | PostgreSQL DB | [x] 接続済み |
+| Cloudinary | 画像ストレージ | [ ] 未設定 |
+| Vercel | ホスティング | [🔄] ログイン済み・デプロイ中 |
 
 作業ディレクトリ: `/home/myname/bluelamp/投票システム/`

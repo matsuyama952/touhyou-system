@@ -1,23 +1,23 @@
 import { createTheme } from '@mui/material/styles';
-import { neonWhitePalette, neonGlow, gradients } from './palette';
+import { luxuryPalette, luxuryShadow, gradients } from './palette';
 import { typography } from './typography';
 import { components } from './components';
 
 /**
- * Neon White テーマ
- * ホワイトベース + シアン/マゼンタのネオンカラー
+ * Luxury Gold テーマ
+ * ホワイト/クリームベース + ゴールドアクセント
  */
 export const theme = createTheme({
-  palette: neonWhitePalette,
+  palette: luxuryPalette,
   typography,
   components,
   shape: {
-    borderRadius: 12,
+    borderRadius: 0,
   },
   spacing: 8,
 });
 
 // カスタムプロパティのエクスポート
-export { neonGlow, gradients };
+export { luxuryShadow, gradients };
 
 export default theme;

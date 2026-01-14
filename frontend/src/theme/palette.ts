@@ -1,81 +1,81 @@
 /**
- * Neon White テーマ - カラーパレット
- * ホワイトベース + シアン/マゼンタのネオンカラー
+ * Luxury Gold テーマ - カラーパレット
+ * ホワイト/クリームベース + ゴールドアクセント
  */
 
-export const neonWhitePalette = {
+export const luxuryPalette = {
   primary: {
-    main: '#00D4FF',      // シアン（メインアクセント）
-    light: '#66E5FF',
-    dark: '#00A3CC',
-    contrastText: '#0A0A0A',
+    main: '#D4AF37',      // ゴールド（メインアクセント）
+    light: '#E8D5A3',
+    dark: '#B8952F',
+    contrastText: '#000000',
   },
   secondary: {
-    main: '#FF0080',      // マゼンタ（サブアクセント）
-    light: '#FF4DA6',
-    dark: '#CC0066',
+    main: '#333333',      // ダークグレー（サブアクセント）
+    light: '#666666',
+    dark: '#1A1A1A',
     contrastText: '#FFFFFF',
   },
   background: {
-    default: '#FAFAFA',   // 明るいグレーホワイト
-    paper: '#FFFFFF',     // 純白
+    default: '#F5F5F5',   // ライトグレー
+    paper: '#FFFEF9',     // クリームホワイト
   },
   text: {
-    primary: '#1A1A1A',   // ほぼ黒
-    secondary: '#666666', // グレー
-    disabled: '#AAAAAA',
+    primary: '#000000',   // ブラック
+    secondary: '#333333', // ダークグレー
+    disabled: '#999999',
   },
-  divider: 'rgba(0, 0, 0, 0.08)',
+  divider: 'rgba(0, 0, 0, 0.12)',
   action: {
-    hover: 'rgba(0, 212, 255, 0.08)',
-    selected: 'rgba(0, 212, 255, 0.12)',
+    hover: 'rgba(212, 175, 55, 0.08)',
+    selected: 'rgba(212, 175, 55, 0.12)',
     disabled: 'rgba(0, 0, 0, 0.26)',
     disabledBackground: 'rgba(0, 0, 0, 0.12)',
   },
   success: {
-    main: '#00E676',
-    light: '#69F0AE',
-    dark: '#00C853',
-    contrastText: '#0A0A0A',
+    main: '#4CAF50',
+    light: '#81C784',
+    dark: '#388E3C',
+    contrastText: '#FFFFFF',
   },
   warning: {
-    main: '#FFAB00',
-    light: '#FFD740',
-    dark: '#FF8F00',
-    contrastText: '#0A0A0A',
+    main: '#D4AF37',      // ゴールド
+    light: '#E8D5A3',
+    dark: '#B8952F',
+    contrastText: '#000000',
   },
   error: {
-    main: '#FF1744',
-    light: '#FF616F',
-    dark: '#D50000',
+    main: '#D32F2F',
+    light: '#EF5350',
+    dark: '#C62828',
     contrastText: '#FFFFFF',
   },
   info: {
-    main: '#00D4FF',
-    light: '#66E5FF',
-    dark: '#00A3CC',
-    contrastText: '#0A0A0A',
+    main: '#D4AF37',      // ゴールド
+    light: '#E8D5A3',
+    dark: '#B8952F',
+    contrastText: '#000000',
   },
 };
 
 /**
- * ネオングロー効果用のカスタムカラー
+ * ゴールド効果用のカスタムカラー
  */
-export const neonGlow = {
-  cyan: '0 0 20px rgba(0, 212, 255, 0.5)',
-  magenta: '0 0 20px rgba(255, 0, 128, 0.5)',
-  cyanStrong: '0 0 30px rgba(0, 212, 255, 0.7)',
-  magentaStrong: '0 0 30px rgba(255, 0, 128, 0.7)',
+export const luxuryShadow = {
+  cyan: '0 4px 16px rgba(212, 175, 55, 0.3)',
+  magenta: '0 4px 16px rgba(212, 175, 55, 0.3)',
+  cyanStrong: '0 6px 24px rgba(212, 175, 55, 0.4)',
+  magentaStrong: '0 6px 24px rgba(212, 175, 55, 0.4)',
 };
 
 /**
  * グラデーション定義
  */
 export const gradients = {
-  /** シアン→マゼンタのネオングラデーション */
-  neonPrimary: 'linear-gradient(135deg, #00D4FF 0%, #FF0080 100%)',
-  /** 淡いネオングラデーション（背景用） */
-  neonSubtle: 'linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 0, 128, 0.1) 100%)',
+  /** ゴールドグラデーション */
+  goldPrimary: 'linear-gradient(135deg, #D4AF37 0%, #E8D5A3 50%, #D4AF37 100%)',
+  /** 淡いゴールドグラデーション（背景用） */
+  goldSubtle: 'linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(232, 213, 163, 0.05) 100%)',
   /** ホワイトベースのソフトグラデーション */
   softWhite: 'linear-gradient(180deg, #FFFFFF 0%, #F5F5F5 100%)',
 };

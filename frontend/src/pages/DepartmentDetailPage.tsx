@@ -56,8 +56,6 @@ function DepartmentDetailPage() {
       <ResultsLayout
         title="項目別詳細"
         totalEvaluators={resultsData?.totalEvaluators}
-        targetEvaluators={resultsData?.targetEvaluators}
-        isLoading
       >
         <Box sx={{ textAlign: 'center', py: 8 }}>
           <CircularProgress size={48} sx={{ mb: 2 }} />
@@ -124,7 +122,6 @@ function DepartmentDetailPage() {
     <ResultsLayout
       title={departmentName}
       totalEvaluators={resultsData?.totalEvaluators ?? totalEvaluators}
-      targetEvaluators={resultsData?.targetEvaluators ?? 150}
     >
       <Box sx={{ mb: 3 }}>
         <Button

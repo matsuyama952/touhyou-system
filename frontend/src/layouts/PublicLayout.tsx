@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
-import { Box, Container, AppBar, Toolbar, Typography } from '@mui/material';
-import { gradients } from '../theme';
+import { Box, Container, Typography } from '@mui/material';
 
 interface PublicLayoutProps {
   children: ReactNode;
@@ -14,9 +13,21 @@ interface PublicLayoutProps {
   title?: string;
 }
 
+// 高級デザイン用カラーパレット
+const luxuryColors = {
+  background: '#F5F5F5',
+  backgroundAlt: '#FAF9F7',
+  text: '#000000',
+  textSecondary: '#333333',
+  gold: '#D4AF37',
+  goldLight: '#E8D5A3',
+  border: '#E0E0E0',
+  cream: '#FFFEF9',
+};
+
 /**
  * 公開ページ用レイアウト
- * 認証不要のページで使用
+ * 高級ファッション風デザイン
  */
 export function PublicLayout({
   children,
@@ -31,33 +42,55 @@ export function PublicLayout({
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        background: gradients.softWhite,
+        bgcolor: luxuryColors.background,
       }}
     >
       {showHeader && (
-        <AppBar
-          position="sticky"
-          elevation={0}
+        <Box
+          component="header"
           sx={{
-            background: gradients.neonPrimary,
+            borderBottom: `1px solid ${luxuryColors.border}`,
+            bgcolor: luxuryColors.backgroundAlt,
+            py: 3,
           }}
         >
-          <Toolbar>
-            <Typography
-              variant="h4"
-              component="h1"
-              sx={{
-                width: '100%',
-                textAlign: 'center',
-                fontWeight: 700,
-                color: 'common.white',
-                textShadow: '0 2px 4px rgba(0,0,0,0.1)',
-              }}
-            >
-              {title}
-            </Typography>
-          </Toolbar>
-        </AppBar>
+          <Container maxWidth={maxWidth}>
+            <Box sx={{ textAlign: 'center' }}>
+              {/* ゴールドのアクセントライン */}
+              <Box
+                sx={{
+                  width: 40,
+                  height: 1,
+                  bgcolor: luxuryColors.gold,
+                  mx: 'auto',
+                  mb: 2,
+                }}
+              />
+              <Typography
+                variant="h4"
+                component="h1"
+                sx={{
+                  fontFamily: '"Playfair Display", "Times New Roman", serif',
+                  fontWeight: 500,
+                  color: luxuryColors.text,
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {title}
+              </Typography>
+              <Box
+                sx={{
+                  width: 40,
+                  height: 1,
+                  bgcolor: luxuryColors.gold,
+                  mx: 'auto',
+                  mt: 2,
+                }}
+              />
+            </Box>
+          </Container>
+        </Box>
       )}
 
       <Box
@@ -75,7 +108,7 @@ export function PublicLayout({
         <Container
           maxWidth={maxWidth}
           sx={{
-            py: 3,
+            py: 4,
             ...(centerContent && {
               display: 'flex',
               flexDirection: 'column',
@@ -86,6 +119,27 @@ export function PublicLayout({
         >
           {children}
         </Container>
+      </Box>
+
+      {/* フッター */}
+      <Box
+        component="footer"
+        sx={{
+          borderTop: `1px solid ${luxuryColors.border}`,
+          py: 2,
+          textAlign: 'center',
+        }}
+      >
+        <Typography
+          variant="caption"
+          sx={{
+            color: luxuryColors.textSecondary,
+            letterSpacing: '0.1em',
+            fontFamily: '"Playfair Display", serif',
+          }}
+        >
+          VOTING SYSTEM
+        </Typography>
       </Box>
     </Box>
   );

@@ -127,6 +127,18 @@ export interface VoteResponse {
 }
 
 /**
+ * 項目別得点（結果表示用・簡易版）
+ */
+export interface CriteriaScore {
+  /** 評価項目ID */
+  criteriaId: string;
+  /** 評価項目名 */
+  criteriaName: string;
+  /** 合計点 */
+  totalPoints: number;
+}
+
+/**
  * 部署別評価結果（総合得点）
  */
 export interface DepartmentResult {
@@ -136,10 +148,22 @@ export interface DepartmentResult {
   departmentName: string;
   /** 部署画像URL */
   imageUrl?: string;
-  /** 総合得点（全評価者の3項目合計点の合計） */
+  /** 総合得点（全評価者の4項目合計点の合計） */
   totalScore: number;
   /** 順位 */
   rank?: number;
+  /** 項目別得点 */
+  criteriaResults?: CriteriaScore[];
+}
+
+/**
+ * 評価項目ヘッダー（短縮名）
+ */
+export interface CriteriaHeader {
+  /** 評価項目ID */
+  id: string;
+  /** 評価項目名（短縮名） */
+  name: string;
 }
 
 /**
@@ -148,6 +172,8 @@ export interface DepartmentResult {
 export interface ResultsResponse {
   /** 部署別結果一覧 */
   results: DepartmentResult[];
+  /** 評価項目ヘッダー */
+  criteriaHeaders?: CriteriaHeader[];
   /** 評価済み人数 */
   totalEvaluators: number;
   /** 対象者数 */

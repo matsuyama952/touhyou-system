@@ -1,8 +1,8 @@
 import type { Components, Theme } from '@mui/material/styles';
-import { neonGlow } from './palette';
+import { luxuryShadow } from './palette';
 
 /**
- * Neon White テーマ - コンポーネントオーバーライド
+ * Luxury Gold テーマ - コンポーネントオーバーライド
  */
 export const components: Components<Theme> = {
   MuiCssBaseline: {
@@ -29,37 +29,40 @@ export const components: Components<Theme> = {
   MuiButton: {
     styleOverrides: {
       root: {
-        borderRadius: '12px',
+        borderRadius: '0px',
         padding: '10px 24px',
         fontWeight: 600,
         transition: 'all 0.3s ease',
+        fontFamily: '"Playfair Display", serif',
+        letterSpacing: '0.1em',
       },
       contained: {
         boxShadow: 'none',
         '&:hover': {
-          boxShadow: neonGlow.cyan,
+          boxShadow: luxuryShadow.cyan,
           transform: 'translateY(-2px)',
         },
       },
       containedPrimary: {
-        background: 'linear-gradient(135deg, #00D4FF 0%, #00A3CC 100%)',
+        background: 'linear-gradient(135deg, #D4AF37 0%, #B8952F 100%)',
+        color: '#FFFFFF',
         '&:hover': {
-          background: 'linear-gradient(135deg, #66E5FF 0%, #00D4FF 100%)',
-          boxShadow: neonGlow.cyanStrong,
+          background: 'linear-gradient(135deg, #E8D5A3 0%, #D4AF37 100%)',
+          boxShadow: luxuryShadow.cyanStrong,
         },
       },
       containedSecondary: {
-        background: 'linear-gradient(135deg, #FF0080 0%, #CC0066 100%)',
+        background: 'linear-gradient(135deg, #333333 0%, #1A1A1A 100%)',
         '&:hover': {
-          background: 'linear-gradient(135deg, #FF4DA6 0%, #FF0080 100%)',
-          boxShadow: neonGlow.magentaStrong,
+          background: 'linear-gradient(135deg, #666666 0%, #333333 100%)',
+          boxShadow: luxuryShadow.magentaStrong,
         },
       },
       outlined: {
         borderWidth: '2px',
         '&:hover': {
           borderWidth: '2px',
-          boxShadow: neonGlow.cyan,
+          boxShadow: luxuryShadow.cyan,
         },
       },
     },
@@ -67,7 +70,7 @@ export const components: Components<Theme> = {
   MuiCard: {
     styleOverrides: {
       root: {
-        borderRadius: '16px',
+        borderRadius: '0px',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
         transition: 'all 0.3s ease',
         '&:hover': {
@@ -79,7 +82,7 @@ export const components: Components<Theme> = {
   MuiPaper: {
     styleOverrides: {
       root: {
-        borderRadius: '12px',
+        borderRadius: '0px',
       },
       elevation1: {
         boxShadow: '0 2px 10px rgba(0, 0, 0, 0.06)',
@@ -105,7 +108,7 @@ export const components: Components<Theme> = {
         height: 8,
         '& .MuiSlider-track': {
           border: 'none',
-          background: 'linear-gradient(90deg, #00D4FF 0%, #FF0080 100%)',
+          background: 'linear-gradient(90deg, #D4AF37 0%, #E8D5A3 100%)',
         },
         '& .MuiSlider-rail': {
           opacity: 0.3,
@@ -115,17 +118,17 @@ export const components: Components<Theme> = {
           height: 24,
           width: 24,
           backgroundColor: '#FFFFFF',
-          border: '3px solid #00D4FF',
-          boxShadow: neonGlow.cyan,
+          border: '3px solid #D4AF37',
+          boxShadow: luxuryShadow.cyan,
           '&:hover, &.Mui-focusVisible': {
-            boxShadow: neonGlow.cyanStrong,
+            boxShadow: luxuryShadow.cyanStrong,
           },
         },
         '& .MuiSlider-valueLabel': {
-          backgroundColor: '#00D4FF',
-          color: '#0A0A0A',
+          backgroundColor: '#D4AF37',
+          color: '#000000',
           fontWeight: 600,
-          borderRadius: '8px',
+          borderRadius: '0px',
         },
       },
     },
@@ -133,15 +136,15 @@ export const components: Components<Theme> = {
   MuiChip: {
     styleOverrides: {
       root: {
-        borderRadius: '8px',
+        borderRadius: '0px',
         fontWeight: 500,
       },
       filled: {
         '&.MuiChip-colorPrimary': {
-          background: 'linear-gradient(135deg, #00D4FF 0%, #00A3CC 100%)',
+          background: 'linear-gradient(135deg, #D4AF37 0%, #B8952F 100%)',
         },
         '&.MuiChip-colorSecondary': {
-          background: 'linear-gradient(135deg, #FF0080 0%, #CC0066 100%)',
+          background: 'linear-gradient(135deg, #333333 0%, #1A1A1A 100%)',
         },
       },
     },
@@ -149,13 +152,13 @@ export const components: Components<Theme> = {
   MuiLinearProgress: {
     styleOverrides: {
       root: {
-        borderRadius: '4px',
-        height: 8,
-        backgroundColor: 'rgba(0, 212, 255, 0.1)',
+        borderRadius: '0px',
+        height: 4,
+        backgroundColor: '#E0E0E0',
       },
       bar: {
-        borderRadius: '4px',
-        background: 'linear-gradient(90deg, #00D4FF 0%, #FF0080 100%)',
+        borderRadius: '0px',
+        background: '#D4AF37',
       },
     },
   },
@@ -163,13 +166,13 @@ export const components: Components<Theme> = {
     styleOverrides: {
       root: {
         '& .MuiOutlinedInput-root': {
-          borderRadius: '12px',
+          borderRadius: '0px',
           '&:hover fieldset': {
-            borderColor: '#00D4FF',
+            borderColor: '#D4AF37',
           },
           '&.Mui-focused fieldset': {
-            borderColor: '#00D4FF',
-            boxShadow: '0 0 0 3px rgba(0, 212, 255, 0.1)',
+            borderColor: '#D4AF37',
+            boxShadow: '0 0 0 3px rgba(212, 175, 55, 0.1)',
           },
         },
       },
@@ -178,23 +181,23 @@ export const components: Components<Theme> = {
   MuiAlert: {
     styleOverrides: {
       root: {
-        borderRadius: '12px',
+        borderRadius: '0px',
       },
       standardSuccess: {
-        backgroundColor: 'rgba(0, 230, 118, 0.1)',
-        color: '#00C853',
+        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+        color: '#388E3C',
       },
       standardError: {
-        backgroundColor: 'rgba(255, 23, 68, 0.1)',
-        color: '#D50000',
+        backgroundColor: 'rgba(211, 47, 47, 0.1)',
+        color: '#C62828',
       },
       standardWarning: {
-        backgroundColor: 'rgba(255, 171, 0, 0.1)',
-        color: '#FF8F00',
+        backgroundColor: 'rgba(212, 175, 55, 0.1)',
+        color: '#B8952F',
       },
       standardInfo: {
-        backgroundColor: 'rgba(0, 212, 255, 0.1)',
-        color: '#00A3CC',
+        backgroundColor: 'rgba(212, 175, 55, 0.1)',
+        color: '#B8952F',
       },
     },
   },
@@ -202,7 +205,7 @@ export const components: Components<Theme> = {
     styleOverrides: {
       tooltip: {
         backgroundColor: '#1A1A1A',
-        borderRadius: '8px',
+        borderRadius: '0px',
         fontSize: '0.75rem',
         padding: '8px 12px',
       },

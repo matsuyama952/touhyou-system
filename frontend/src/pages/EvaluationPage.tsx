@@ -17,13 +17,24 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { PublicLayout } from '../layouts/PublicLayout';
 import { useVoteGuard } from '../contexts/VoteGuardContext';
 import { getDepartments, getCriteria, submitVote } from '../services/api';
-import { neonGlow, gradients } from '../theme';
 import type {
   EvaluationState,
   Department,
   EvaluationCriteria,
   VoteRequest,
 } from '../types';
+
+// 高級デザイン用カラーパレット
+const luxuryColors = {
+  background: '#F5F5F5',
+  backgroundAlt: '#FAF9F7',
+  text: '#000000',
+  textSecondary: '#333333',
+  gold: '#D4AF37',
+  goldLight: '#E8D5A3',
+  border: '#E0E0E0',
+  cream: '#FFFEF9',
+};
 
 // ============================================================
 // 初期状態
@@ -51,57 +62,103 @@ interface IntroScreenProps {
 function IntroScreen({ criteria, onStart }: IntroScreenProps) {
   return (
     <Box sx={{ textAlign: 'center' }}>
-      <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
+      <Typography
+        variant="h5"
+        sx={{
+          fontFamily: '"Playfair Display", serif',
+          fontWeight: 500,
+          mb: 4,
+          color: luxuryColors.text,
+          letterSpacing: '0.05em',
+        }}
+      >
         各部署の発表を評価してください
       </Typography>
 
       {/* 投票の流れ */}
-      <Paper elevation={2} sx={{ p: 3, mb: 3, textAlign: 'left' }}>
+      <Paper
+        elevation={0}
+        sx={{
+          p: 3,
+          mb: 3,
+          textAlign: 'left',
+          bgcolor: luxuryColors.cream,
+          border: `1px solid ${luxuryColors.border}`,
+        }}
+      >
         <Typography
           variant="subtitle2"
-          color="text.secondary"
-          sx={{ mb: 2, fontWeight: 600 }}
+          sx={{
+            mb: 2,
+            fontWeight: 600,
+            color: luxuryColors.gold,
+            letterSpacing: '0.1em',
+            fontFamily: '"Playfair Display", serif',
+          }}
         >
-          投票の流れ
+          PROCESS
         </Typography>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {[
             '各カンパニー・事業部を順番に評価する',
             '入力内容を確認',
             '送信して完了',
           ].map((text, index) => (
-            <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Box
                 sx={{
                   width: 32,
                   height: 32,
                   borderRadius: '50%',
-                  background: gradients.neonPrimary,
+                  border: `2px solid ${luxuryColors.gold}`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#FFFFFF',
-                  fontWeight: 700,
+                  color: luxuryColors.gold,
+                  fontWeight: 600,
                   fontSize: '0.875rem',
                   flexShrink: 0,
+                  fontFamily: '"Playfair Display", serif',
                 }}
               >
                 {index + 1}
               </Box>
-              <Typography variant="body1">{text}</Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  fontFamily: '"Playfair Display", serif',
+                  color: luxuryColors.text,
+                }}
+              >
+                {text}
+              </Typography>
             </Box>
           ))}
         </Box>
       </Paper>
 
       {/* 評価項目の説明 */}
-      <Paper elevation={2} sx={{ p: 3, mb: 3, textAlign: 'left' }}>
+      <Paper
+        elevation={0}
+        sx={{
+          p: 3,
+          mb: 4,
+          textAlign: 'left',
+          bgcolor: luxuryColors.cream,
+          border: `1px solid ${luxuryColors.border}`,
+        }}
+      >
         <Typography
           variant="subtitle2"
-          color="text.secondary"
-          sx={{ mb: 2, fontWeight: 600 }}
+          sx={{
+            mb: 2,
+            fontWeight: 600,
+            color: luxuryColors.gold,
+            letterSpacing: '0.1em',
+            fontFamily: '"Playfair Display", serif',
+          }}
         >
-          {criteria.length}つの評価項目
+          {criteria.length} CRITERIA
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
           {criteria.map((item) => (
@@ -109,14 +166,45 @@ function IntroScreen({ criteria, onStart }: IntroScreenProps) {
               key={item.id}
               variant="outlined"
               sx={{
-                background: gradients.neonSubtle,
-                border: '1px solid rgba(0, 0, 0, 0.08)',
+                bgcolor: luxuryColors.backgroundAlt,
+                border: `1px solid ${luxuryColors.border}`,
               }}
             >
               <CardContent sx={{ py: 1.5, '&:last-child': { pb: 1.5 } }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                  {item.name}
-                </Typography>
+                {(() => {
+                  const parts = item.name.split('\n');
+                  const title = parts[0];
+                  const description = parts.slice(1).join('\n');
+                  return (
+                    <>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{
+                          fontWeight: 600,
+                          fontFamily: '"Playfair Display", serif',
+                          color: luxuryColors.text,
+                          letterSpacing: '0.03em',
+                        }}
+                      >
+                        {title}
+                      </Typography>
+                      {description && (
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            mt: 0.5,
+                            whiteSpace: 'pre-line',
+                            fontFamily: '"Playfair Display", serif',
+                            color: luxuryColors.textSecondary,
+                            lineHeight: 1.5,
+                          }}
+                        >
+                          {description}
+                        </Typography>
+                      )}
+                    </>
+                  );
+                })()}
               </CardContent>
             </Card>
           ))}
@@ -125,17 +213,27 @@ function IntroScreen({ criteria, onStart }: IntroScreenProps) {
 
       {/* 投票開始ボタン */}
       <Button
-        variant="contained"
+        variant="outlined"
         size="large"
         fullWidth
         onClick={onStart}
         sx={{
           py: 2,
           fontSize: '1.125rem',
-          fontWeight: 600,
+          fontWeight: 500,
+          fontFamily: '"Playfair Display", serif',
+          color: luxuryColors.gold,
+          borderColor: luxuryColors.gold,
+          borderWidth: 2,
+          letterSpacing: '0.1em',
+          '&:hover': {
+            borderColor: luxuryColors.gold,
+            borderWidth: 2,
+            bgcolor: 'rgba(212, 175, 55, 0.05)',
+          },
         }}
       >
-        投票を始める
+        START VOTING
       </Button>
     </Box>
   );
@@ -173,15 +271,20 @@ function ScoreSelector({ value, onChange }: ScoreSelectorProps) {
                 minWidth: 44,
                 borderRadius: '50%',
                 fontWeight: 600,
+                fontFamily: '"Playfair Display", serif',
                 ...(isSelected && {
-                  boxShadow: neonGlow.cyan,
+                  bgcolor: luxuryColors.gold,
+                  color: '#FFFFFF',
+                  '&:hover': {
+                    bgcolor: luxuryColors.gold,
+                  },
                 }),
                 ...(!isSelected && {
-                  borderColor: 'rgba(0, 0, 0, 0.12)',
-                  color: 'text.primary',
+                  borderColor: luxuryColors.border,
+                  color: luxuryColors.text,
                   '&:hover': {
-                    borderColor: 'primary.main',
-                    backgroundColor: 'rgba(0, 212, 255, 0.08)',
+                    borderColor: luxuryColors.gold,
+                    backgroundColor: 'rgba(212, 175, 55, 0.05)',
                   },
                 }),
               }}
@@ -199,11 +302,17 @@ function ScoreSelector({ value, onChange }: ScoreSelectorProps) {
           px: 1,
         }}
       >
-        <Typography variant="caption" color="text.secondary">
-          低い
+        <Typography
+          variant="caption"
+          sx={{ color: luxuryColors.textSecondary, fontFamily: '"Playfair Display", serif' }}
+        >
+          Low
         </Typography>
-        <Typography variant="caption" color="text.secondary">
-          高い
+        <Typography
+          variant="caption"
+          sx={{ color: luxuryColors.textSecondary, fontFamily: '"Playfair Display", serif' }}
+        >
+          High
         </Typography>
       </Box>
     </Box>
@@ -247,39 +356,52 @@ function EvaluationScreen({
       <Box sx={{ mb: 3 }}>
         <Typography
           variant="body2"
-          color="text.secondary"
-          sx={{ textAlign: 'center', mb: 1 }}
+          sx={{
+            textAlign: 'center',
+            mb: 1,
+            color: luxuryColors.textSecondary,
+            fontFamily: '"Playfair Display", serif',
+            letterSpacing: '0.05em',
+          }}
         >
-          {departmentIndex + 1}/{totalDepartments}ページ
+          {departmentIndex + 1} / {totalDepartments}
         </Typography>
         <LinearProgress
           variant="determinate"
           value={progress}
           sx={{
-            height: 8,
-            borderRadius: 4,
-            backgroundColor: 'rgba(0, 0, 0, 0.08)',
+            height: 4,
+            borderRadius: 0,
+            backgroundColor: luxuryColors.border,
             '& .MuiLinearProgress-bar': {
-              background: gradients.neonPrimary,
-              borderRadius: 4,
+              backgroundColor: luxuryColors.gold,
             },
           }}
         />
       </Box>
 
       {/* 部署カード */}
-      <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+      <Paper
+        elevation={0}
+        sx={{
+          p: 3,
+          mb: 3,
+          bgcolor: luxuryColors.cream,
+          border: `1px solid ${luxuryColors.border}`,
+        }}
+      >
         <Box
           sx={{
             width: '100%',
             height: 180,
-            background: gradients.neonSubtle,
-            borderRadius: 3,
+            bgcolor: luxuryColors.backgroundAlt,
+            borderRadius: 0,
             mb: 2,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             overflow: 'hidden',
+            border: `1px solid ${luxuryColors.border}`,
           }}
         >
           {department.imageUrl ? (
@@ -294,14 +416,23 @@ function EvaluationScreen({
               }}
             />
           ) : (
-            <Typography variant="body2" color="text.disabled">
-              部署画像
+            <Typography
+              variant="body2"
+              sx={{ color: luxuryColors.textSecondary, fontFamily: '"Playfair Display", serif' }}
+            >
+              Department Image
             </Typography>
           )}
         </Box>
         <Typography
           variant="h4"
-          sx={{ fontWeight: 700, textAlign: 'center' }}
+          sx={{
+            fontWeight: 500,
+            textAlign: 'center',
+            fontFamily: '"Playfair Display", serif',
+            color: luxuryColors.text,
+            letterSpacing: '0.03em',
+          }}
         >
           {department.name}
         </Typography>
@@ -310,10 +441,50 @@ function EvaluationScreen({
       {/* 評価項目 */}
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
         {criteria.map((item) => (
-          <Paper key={item.id} elevation={2} sx={{ p: 2.5 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, whiteSpace: 'pre-line' }}>
-              {item.name}
-            </Typography>
+          <Paper
+            key={item.id}
+            elevation={0}
+            sx={{
+              p: 2.5,
+              bgcolor: luxuryColors.cream,
+              border: `1px solid ${luxuryColors.border}`,
+            }}
+          >
+            {(() => {
+              const parts = item.name.split('\n');
+              const title = parts[0];
+              const description = parts.slice(1).join('\n');
+              return (
+                <>
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 1,
+                      fontFamily: '"Playfair Display", serif',
+                      color: luxuryColors.text,
+                      letterSpacing: '0.03em',
+                    }}
+                  >
+                    {title}
+                  </Typography>
+                  {description && (
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        mb: 2,
+                        whiteSpace: 'pre-line',
+                        fontFamily: '"Playfair Display", serif',
+                        color: luxuryColors.textSecondary,
+                        lineHeight: 1.6,
+                      }}
+                    >
+                      {description}
+                    </Typography>
+                  )}
+                </>
+              );
+            })()}
             <ScoreSelector
               value={scores[item.id]}
               onChange={(score) => onScoreChange(item.id, score)}
@@ -331,20 +502,41 @@ function EvaluationScreen({
           sx={{
             flex: 1,
             py: 1.5,
-            borderColor: 'rgba(0, 0, 0, 0.12)',
-            color: 'text.secondary',
+            borderColor: luxuryColors.border,
+            color: luxuryColors.textSecondary,
+            fontFamily: '"Playfair Display", serif',
+            '&:hover': {
+              borderColor: luxuryColors.gold,
+              bgcolor: 'rgba(212, 175, 55, 0.05)',
+            },
           }}
         >
-          {isFirstDepartment ? '戻る' : '前の部署'}
+          {isFirstDepartment ? 'Back' : 'Previous'}
         </Button>
         <Button
-          variant="contained"
+          variant="outlined"
           size="large"
           onClick={onNext}
           disabled={!allScoresEntered}
-          sx={{ flex: 1, py: 1.5 }}
+          sx={{
+            flex: 1,
+            py: 1.5,
+            fontFamily: '"Playfair Display", serif',
+            color: luxuryColors.gold,
+            borderColor: luxuryColors.gold,
+            borderWidth: 2,
+            '&:hover': {
+              borderColor: luxuryColors.gold,
+              borderWidth: 2,
+              bgcolor: 'rgba(212, 175, 55, 0.05)',
+            },
+            '&:disabled': {
+              borderColor: luxuryColors.border,
+              color: luxuryColors.border,
+            },
+          }}
         >
-          {isLastDepartment ? '確認へ' : '次の部署へ'}
+          {isLastDepartment ? 'Confirm' : 'Next'}
         </Button>
       </Box>
     </Box>
@@ -373,12 +565,27 @@ function ConfirmationScreen({
 }: ConfirmationScreenProps) {
   return (
     <Box>
-      <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
+      <Paper
+        elevation={0}
+        sx={{
+          p: 3,
+          mb: 3,
+          bgcolor: luxuryColors.cream,
+          border: `1px solid ${luxuryColors.border}`,
+        }}
+      >
         <Typography
           variant="h6"
-          sx={{ fontWeight: 700, textAlign: 'center', mb: 3 }}
+          sx={{
+            fontWeight: 500,
+            textAlign: 'center',
+            mb: 3,
+            fontFamily: '"Playfair Display", serif',
+            color: luxuryColors.gold,
+            letterSpacing: '0.1em',
+          }}
         >
-          評価内容の確認
+          CONFIRMATION
         </Typography>
 
         {departments.map((dept, index) => (
@@ -388,11 +595,19 @@ function ConfirmationScreen({
               py: 2,
               borderBottom:
                 index < departments.length - 1
-                  ? '1px solid rgba(0, 0, 0, 0.08)'
+                  ? `1px solid ${luxuryColors.border}`
                   : 'none',
             }}
           >
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                fontWeight: 500,
+                mb: 1,
+                fontFamily: '"Playfair Display", serif',
+                color: luxuryColors.text,
+              }}
+            >
               {index + 1}. {dept.name}
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
@@ -405,14 +620,24 @@ function ConfirmationScreen({
                     alignItems: 'center',
                   }}
                 >
-                  <Typography variant="body2" color="text.secondary">
-                    {c.name}
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: luxuryColors.textSecondary,
+                      fontFamily: '"Playfair Display", serif',
+                    }}
+                  >
+                    {c.name.split('\n')[0]}
                   </Typography>
                   <Typography
                     variant="body2"
-                    sx={{ fontWeight: 600, color: 'primary.main' }}
+                    sx={{
+                      fontWeight: 600,
+                      color: luxuryColors.gold,
+                      fontFamily: '"Playfair Display", serif',
+                    }}
                   >
-                    {evaluations[dept.id]?.[c.id] ?? '-'}点
+                    {evaluations[dept.id]?.[c.id] ?? '-'}
                   </Typography>
                 </Box>
               ))}
@@ -431,27 +656,37 @@ function ConfirmationScreen({
           sx={{
             flex: 1,
             py: 1.5,
-            borderColor: 'rgba(0, 0, 0, 0.12)',
-            color: 'text.secondary',
+            borderColor: luxuryColors.border,
+            color: luxuryColors.textSecondary,
+            fontFamily: '"Playfair Display", serif',
+            '&:hover': {
+              borderColor: luxuryColors.gold,
+              bgcolor: 'rgba(212, 175, 55, 0.05)',
+            },
           }}
         >
-          戻って修正
+          Edit
         </Button>
         <Button
-          variant="contained"
-          color="secondary"
+          variant="outlined"
           size="large"
           onClick={onSubmit}
           disabled={isSubmitting}
           sx={{
             flex: 1,
             py: 1.5,
+            fontFamily: '"Playfair Display", serif',
+            color: luxuryColors.gold,
+            borderColor: luxuryColors.gold,
+            borderWidth: 2,
             '&:hover': {
-              boxShadow: neonGlow.magenta,
+              borderColor: luxuryColors.gold,
+              borderWidth: 2,
+              bgcolor: 'rgba(212, 175, 55, 0.05)',
             },
           }}
         >
-          {isSubmitting ? '送信中...' : '評価を送信'}
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </Button>
       </Box>
     </Box>
@@ -463,13 +698,21 @@ function ConfirmationScreen({
  */
 function CompletedScreen() {
   return (
-    <Paper elevation={2} sx={{ p: 6, textAlign: 'center' }}>
+    <Paper
+      elevation={0}
+      sx={{
+        p: 6,
+        textAlign: 'center',
+        bgcolor: luxuryColors.cream,
+        border: `1px solid ${luxuryColors.border}`,
+      }}
+    >
       <Box
         sx={{
           width: 80,
           height: 80,
           borderRadius: '50%',
-          backgroundColor: 'success.main',
+          border: `3px solid ${luxuryColors.gold}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -477,15 +720,30 @@ function CompletedScreen() {
           mb: 3,
         }}
       >
-        <CheckCircleIcon sx={{ fontSize: 48, color: '#FFFFFF' }} />
+        <CheckCircleIcon sx={{ fontSize: 48, color: luxuryColors.gold }} />
       </Box>
-      <Typography variant="h5" sx={{ fontWeight: 700, mb: 2 }}>
-        投票完了
+      <Typography
+        variant="h5"
+        sx={{
+          fontWeight: 500,
+          mb: 2,
+          fontFamily: '"Playfair Display", serif',
+          color: luxuryColors.text,
+          letterSpacing: '0.1em',
+        }}
+      >
+        COMPLETED
       </Typography>
-      <Typography variant="body1" color="text.secondary">
-        ご投票ありがとうございました。
+      <Typography
+        variant="body1"
+        sx={{
+          color: luxuryColors.textSecondary,
+          fontFamily: '"Playfair Display", serif',
+        }}
+      >
+        Thank you for your vote.
         <br />
-        結果は結果表示ページでご確認いただけます。
+        Results will be displayed on the results page.
       </Typography>
     </Paper>
   );
@@ -497,7 +755,7 @@ function CompletedScreen() {
 
 /**
  * P-001: 評価ページ
- * 社員がスマホから全部署の発表を3つの評価項目で10段階評価する
+ * 高級ファッション風デザイン
  */
 function EvaluationPage() {
   const { isLoading: isGuardLoading, hasVoted, fingerprint, markAsVoted } = useVoteGuard();
@@ -645,9 +903,16 @@ function EvaluationPage() {
     return (
       <PublicLayout centerContent>
         <Box sx={{ textAlign: 'center', py: 8 }}>
-          <CircularProgress size={48} sx={{ mb: 2 }} />
-          <Typography variant="body1" color="text.secondary">
-            読み込み中...
+          <CircularProgress size={48} sx={{ mb: 2, color: luxuryColors.gold }} />
+          <Typography
+            variant="body1"
+            sx={{
+              color: luxuryColors.textSecondary,
+              fontFamily: '"Playfair Display", serif',
+              letterSpacing: '0.05em',
+            }}
+          >
+            Loading...
           </Typography>
         </Box>
       </PublicLayout>
@@ -663,13 +928,17 @@ function EvaluationPage() {
     );
   }
 
-  // APIエラーの場合（バックエンド未接続を含む）
+  // APIエラーの場合
   if (hasError) {
     return (
       <PublicLayout>
         <Alert
           severity="info"
-          sx={{ mb: 3 }}
+          sx={{
+            mb: 3,
+            bgcolor: luxuryColors.cream,
+            border: `1px solid ${luxuryColors.border}`,
+          }}
           action={
             <Button
               color="inherit"
@@ -679,27 +948,54 @@ function EvaluationPage() {
                 refetchDepartments();
                 refetchCriteria();
               }}
+              sx={{ color: luxuryColors.gold }}
             >
-              再試行
+              Retry
             </Button>
           }
         >
-          <AlertTitle>バックエンド接続待ち</AlertTitle>
+          <AlertTitle sx={{ fontFamily: '"Playfair Display", serif' }}>
+            Connection Required
+          </AlertTitle>
           <Typography variant="body2">
-            バックエンドAPIに接続できません。バックエンド基盤構築が完了するまでお待ちください。
+            Unable to connect to the server. Please wait.
           </Typography>
         </Alert>
 
-        <Paper elevation={2} sx={{ p: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            評価ページ（P-001）
+        <Paper
+          elevation={0}
+          sx={{
+            p: 3,
+            bgcolor: luxuryColors.cream,
+            border: `1px solid ${luxuryColors.border}`,
+          }}
+        >
+          <Typography
+            variant="h6"
+            gutterBottom
+            sx={{ fontFamily: '"Playfair Display", serif' }}
+          >
+            Evaluation Page
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            このページでは、各部署の発表を3項目×10段階で評価します。
+          <Typography
+            variant="body2"
+            sx={{
+              mb: 2,
+              color: luxuryColors.textSecondary,
+              fontFamily: '"Playfair Display", serif',
+            }}
+          >
+            Evaluate each department on 4 criteria with a 10-point scale.
           </Typography>
-          <Box sx={{ bgcolor: 'grey.100', p: 2, borderRadius: 1 }}>
-            <Typography variant="caption" color="text.secondary">
-              デバイスフィンガープリント: {fingerprint?.slice(0, 16)}...
+          <Box sx={{ bgcolor: luxuryColors.backgroundAlt, p: 2, borderRadius: 0 }}>
+            <Typography
+              variant="caption"
+              sx={{
+                color: luxuryColors.textSecondary,
+                fontFamily: '"Playfair Display", serif',
+              }}
+            >
+              Device Fingerprint: {fingerprint?.slice(0, 16)}...
             </Typography>
           </Box>
         </Paper>
@@ -707,13 +1003,13 @@ function EvaluationPage() {
     );
   }
 
-  // データ取得成功 - sortedDepartmentsは上部でuseMemo計算済み
+  // データ取得成功
   const sortedCriteria = [...(criteria ?? [])].sort(
     (a, b) => a.displayOrder - b.displayOrder
   );
 
   return (
-    <PublicLayout title="投票">
+    <PublicLayout title="VOTING">
       {/* イントロ画面 */}
       {state.currentStep === 'intro' && (
         <IntroScreen

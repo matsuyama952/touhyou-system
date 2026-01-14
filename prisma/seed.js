@@ -8,13 +8,12 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding database...');
 
-  // 部署データ（5件）
+  // 部署データ（4件）
   const departments = [
-    { name: 'コンシューマーカンパニー', displayOrder: 1, imageUrl: 'https://placehold.co/400x300/00d4ff/ffffff?text=Consumer' },
-    { name: 'コーポレートセールスカンパニー', displayOrder: 2, imageUrl: 'https://placehold.co/400x300/00d4ff/ffffff?text=Corporate' },
-    { name: 'SSDカンパニー', displayOrder: 3, imageUrl: 'https://placehold.co/400x300/00d4ff/ffffff?text=SSD' },
-    { name: 'BBC', displayOrder: 4, imageUrl: 'https://placehold.co/400x300/00d4ff/ffffff?text=BBC' },
-    { name: 'Unneon', displayOrder: 5, imageUrl: 'https://placehold.co/400x300/00d4ff/ffffff?text=Unneon' },
+    { name: 'コンシューマーカンパニー', displayOrder: 1, imageUrl: 'https://placehold.co/400x300/d4af37/ffffff?text=Consumer' },
+    { name: 'コーポレートセールスカンパニー', displayOrder: 2, imageUrl: 'https://placehold.co/400x300/d4af37/ffffff?text=Corporate' },
+    { name: 'SSDカンパニー', displayOrder: 3, imageUrl: 'https://placehold.co/400x300/d4af37/ffffff?text=SSD' },
+    { name: 'BBC', displayOrder: 4, imageUrl: 'https://placehold.co/400x300/d4af37/ffffff?text=BBC' },
   ];
 
   for (const dept of departments) {
@@ -27,7 +26,7 @@ async function main() {
       },
     });
   }
-  console.log('Created 5 departments');
+  console.log('Created 4 departments');
 
   // 評価項目データ（4件）
   const criteria = [

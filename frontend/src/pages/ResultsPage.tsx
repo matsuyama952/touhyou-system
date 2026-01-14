@@ -1,5 +1,5 @@
+import { useState, useEffect, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -8,25 +8,178 @@ import {
   AlertTitle,
   Paper,
   Button,
-  Card,
-  CardContent,
-  CardActionArea,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import { ResultsLayout } from '../layouts/ResultsLayout';
 import { getResults } from '../services/api';
-import { PAGE_ROUTES } from '../types';
-import { neonGlow } from '../theme';
+
+// 高級デザイン用カラーパレット（スクリーン投影用・高コントラスト）
+const luxuryColors = {
+  background: '#F5F5F5',
+  backgroundAlt: '#FAF9F7',
+  text: '#000000',
+  textSecondary: '#333333',
+  gold: '#D4AF37',
+  goldLight: '#E8D5A3',
+  border: '#CCCCCC',
+  cream: '#FFFEF9',
+};
+
+/**
+ * カウントアップ用カスタムフック
+ */
+function useCountUp(targetValue: number, duration: number = 2000, startAnimation: boolean = true) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!startAnimation || targetValue === 0) {
+      setCount(targetValue);
+      return;
+    }
+
+    let startTime: number | null = null;
+    let animationFrame: number;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      setCount(Math.floor(eased * targetValue));
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
+  }, [targetValue, duration, startAnimation]);
+
+  return count;
+}
+
+/**
+ * カウントアップセル コンポーネント（スクリーン投影用・大きめ）
+ */
+function CountUpCell({
+  value,
+  isFirst,
+  startAnimation
+}: {
+  value: number;
+  isFirst: boolean;
+  startAnimation: boolean;
+}) {
+  const displayValue = useCountUp(value, 2000, startAnimation);
+
+  return (
+    <TableCell
+      align="center"
+      sx={{
+        fontFamily: '"Playfair Display", serif',
+        fontWeight: 600,
+        fontSize: '2.5rem',
+        color: isFirst ? luxuryColors.gold : luxuryColors.text,
+        bgcolor: isFirst ? 'rgba(212, 175, 55, 0.08)' : 'transparent',
+        borderBottom: `2px solid ${luxuryColors.border}`,
+        py: 3,
+        px: 2,
+      }}
+    >
+      {displayValue.toLocaleString()}
+    </TableCell>
+  );
+}
+
+/**
+ * シールコンポーネント（スクリーン投影用・大きめ）
+ */
+function SealOverlay({
+  isRevealed,
+  onReveal,
+  rank
+}: {
+  isRevealed: boolean;
+  onReveal: () => void;
+  rank: number;
+}) {
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleClick = () => {
+    if (!isRevealed && !isAnimating) {
+      setIsAnimating(true);
+      setTimeout(() => {
+        onReveal();
+        setIsAnimating(false);
+      }, 600);
+    }
+  };
+
+  if (isRevealed) {
+    return null;
+  }
+
+  return (
+    <Box
+      onClick={handleClick}
+      sx={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: `linear-gradient(135deg, ${luxuryColors.gold} 0%, ${luxuryColors.goldLight} 50%, ${luxuryColors.gold} 100%)`,
+        cursor: 'pointer',
+        borderRadius: 0,
+        overflow: 'hidden',
+        transition: 'all 0.6s ease-in-out',
+        transform: isAnimating ? 'rotateY(90deg)' : 'rotateY(0deg)',
+        transformStyle: 'preserve-3d',
+        boxShadow: '0 4px 16px rgba(212, 175, 55, 0.4)',
+        '&:hover': {
+          boxShadow: '0 6px 24px rgba(212, 175, 55, 0.6)',
+        },
+      }}
+    >
+      <Typography
+        sx={{
+          fontFamily: '"Playfair Display", serif',
+          color: '#FFFFFF',
+          fontWeight: 600,
+          letterSpacing: '0.15em',
+          textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+          userSelect: 'none',
+          fontSize: '2rem',
+        }}
+      >
+        {rank}位 - CLICK TO REVEAL
+      </Typography>
+    </Box>
+  );
+}
 
 /**
  * P-002: 結果表示ページ
- * リアルタイム評価結果（総合得点）をスクリーンに投影する
+ * スクリーン投影用・60m離れても見やすい大きなデザイン
  */
 function ResultsPage() {
-  const navigate = useNavigate();
+  const [revealedRanks, setRevealedRanks] = useState<Set<number>>(new Set());
+  const [animationStarted, setAnimationStarted] = useState(false);
 
-  // 評価結果を取得（5秒間隔でポーリング）
   const {
     data: resultsData,
     isLoading,
@@ -35,176 +188,347 @@ function ResultsPage() {
   } = useQuery({
     queryKey: ['results'],
     queryFn: getResults,
-    // 5秒間隔でリフェッチ
     refetchInterval: 5000,
   });
 
-  // ローディング中（初回のみ）
+  useEffect(() => {
+    if (resultsData && !animationStarted) {
+      setAnimationStarted(true);
+    }
+  }, [resultsData, animationStarted]);
+
+  const revealRank = useCallback((rank: number) => {
+    setRevealedRanks((prev) => new Set([...prev, rank]));
+  }, []);
+
+  const revealAll = useCallback(() => {
+    if (resultsData?.results) {
+      const allRanks = resultsData.results.map((r) => r.rank || 0);
+      setRevealedRanks(new Set(allRanks));
+    }
+  }, [resultsData]);
+
   if (isLoading && !resultsData) {
     return (
-      <ResultsLayout isLoading>
-        <Box sx={{ textAlign: 'center', py: 8 }}>
-          <CircularProgress size={48} sx={{ mb: 2 }} />
-          <Typography variant="body1" color="text.secondary">
-            結果を読み込み中...
+      <ResultsLayout>
+        <Box sx={{ textAlign: 'center', py: 12 }}>
+          <CircularProgress
+            size={80}
+            sx={{ mb: 4, color: luxuryColors.gold }}
+          />
+          <Typography
+            sx={{
+              fontFamily: '"Playfair Display", serif',
+              color: luxuryColors.textSecondary,
+              letterSpacing: '0.1em',
+              fontSize: '2rem',
+            }}
+          >
+            Loading Results...
           </Typography>
         </Box>
       </ResultsLayout>
     );
   }
 
-  // APIエラーの場合（バックエンド未接続を含む）
   if (error) {
     return (
       <ResultsLayout>
         <Alert
           severity="info"
-          sx={{ mb: 3 }}
+          sx={{
+            mb: 4,
+            bgcolor: luxuryColors.cream,
+            border: `2px solid ${luxuryColors.border}`,
+            fontSize: '1.5rem',
+          }}
           action={
             <Button
               color="inherit"
-              size="small"
-              startIcon={<RefreshIcon />}
+              size="large"
+              startIcon={<RefreshIcon sx={{ fontSize: 32 }} />}
               onClick={() => refetch()}
+              sx={{ color: luxuryColors.gold, fontSize: '1.5rem' }}
             >
-              再試行
+              Retry
             </Button>
           }
         >
-          <AlertTitle>バックエンド接続待ち</AlertTitle>
-          <Typography variant="body2">
-            バックエンドAPIに接続できません。バックエンド基盤構築が完了するまでお待ちください。
+          <AlertTitle sx={{ fontFamily: '"Playfair Display", serif', fontSize: '2rem' }}>
+            Connection Required
+          </AlertTitle>
+          <Typography sx={{ fontSize: '1.5rem' }}>
+            Unable to connect to the server.
           </Typography>
         </Alert>
-
-        <Paper elevation={2} sx={{ p: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            結果表示ページ（P-002）
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            このページでは、評価結果（総合得点）を棒グラフで表示します。
-            5秒間隔で自動更新されます。
-          </Typography>
-        </Paper>
       </ResultsLayout>
     );
   }
 
-  const { results, totalEvaluators, targetEvaluators } = resultsData || {
+  const { results, criteriaHeaders, totalEvaluators } = resultsData || {
     results: [],
+    criteriaHeaders: [],
     totalEvaluators: 0,
-    targetEvaluators: 150,
   };
-
-  // デバッグ: 取得データを確認
-  console.log('=== Results Data ===');
-  console.log('results:', JSON.stringify(results, null, 2));
-
-  // 最高得点を取得（グラフのスケーリング用）
-  const maxScore = Math.max(...results.map((r) => r.totalScore), 1);
 
   return (
     <ResultsLayout
       totalEvaluators={totalEvaluators}
-      targetEvaluators={targetEvaluators}
     >
       {results.length === 0 ? (
-        <Paper elevation={2} sx={{ p: 4, textAlign: 'center' }}>
-          <Typography variant="h6" color="text.secondary">
-            まだ評価データがありません
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            社員の皆さんの評価をお待ちしています。
+        <Paper
+          elevation={0}
+          sx={{
+            p: 8,
+            textAlign: 'center',
+            bgcolor: luxuryColors.cream,
+            border: `2px solid ${luxuryColors.border}`,
+          }}
+        >
+          <Typography
+            sx={{
+              fontFamily: '"Playfair Display", serif',
+              color: luxuryColors.textSecondary,
+              letterSpacing: '0.1em',
+              fontSize: '2.5rem',
+            }}
+          >
+            No evaluation data yet
           </Typography>
         </Paper>
       ) : (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          {results.map((result, index) => {
-            const isFirst = result.rank === 1;
-            const barWidth = (result.totalScore / maxScore) * 100;
+        <Box>
+          {/* 全て表示ボタン */}
+          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 5 }}>
+            <Button
+              variant="outlined"
+              onClick={revealAll}
+              sx={{
+                fontFamily: '"Playfair Display", serif',
+                color: luxuryColors.gold,
+                borderColor: luxuryColors.gold,
+                borderWidth: 2,
+                letterSpacing: '0.15em',
+                px: 6,
+                py: 2,
+                fontSize: '1.5rem',
+                '&:hover': {
+                  borderColor: luxuryColors.gold,
+                  borderWidth: 2,
+                  bgcolor: 'rgba(212, 175, 55, 0.08)',
+                },
+              }}
+            >
+              REVEAL ALL RESULTS
+            </Button>
+          </Box>
 
-            // デバッグ: 各カードのデータを確認
-            console.log(`Card ${index + 1}: ${result.departmentName} - ${result.totalScore}点`);
-
-            return (
-              <Box key={result.departmentId}>
-                <Card
-                  sx={{
-                    ...(isFirst && {
-                      border: '2px solid',
-                      borderColor: 'secondary.main',
-                      boxShadow: neonGlow.magenta,
-                    }),
-                  }}
-                >
-                  <CardActionArea
-                    onClick={() =>
-                      navigate(PAGE_ROUTES.RESULTS_DETAIL(result.departmentId))
-                    }
+          {/* テーブル形式の結果表示 */}
+          <TableContainer
+            component={Paper}
+            elevation={0}
+            sx={{
+              bgcolor: luxuryColors.cream,
+              border: `2px solid ${luxuryColors.border}`,
+              borderRadius: 0,
+            }}
+          >
+            <Table>
+              {/* ヘッダー */}
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      fontFamily: '"Playfair Display", serif',
+                      color: luxuryColors.textSecondary,
+                      fontWeight: 600,
+                      fontSize: '1.5rem',
+                      letterSpacing: '0.15em',
+                      textTransform: 'uppercase',
+                      width: 120,
+                      borderBottom: `4px solid ${luxuryColors.gold}`,
+                      py: 3,
+                    }}
                   >
-                    <CardContent>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 2,
-                          mb: 2,
-                        }}
-                      >
-                        {isFirst && (
-                          <EmojiEventsIcon
-                            sx={{ color: 'secondary.main', fontSize: 32 }}
-                          />
-                        )}
-                        <Box sx={{ flexGrow: 1 }}>
-                          <Typography
-                            variant="h6"
-                            sx={{
-                              fontWeight: isFirst ? 700 : 500,
-                              color: isFirst ? 'secondary.main' : 'text.primary',
-                            }}
-                          >
-                            {index + 1}. {result.departmentName}
-                          </Typography>
-                        </Box>
-                        <Typography
-                          variant="h4"
-                          sx={{
-                            fontWeight: 700,
-                            color: isFirst ? 'secondary.main' : 'primary.main',
-                          }}
-                        >
-                          {result.totalScore.toLocaleString()}
-                        </Typography>
-                      </Box>
+                    Rank
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      fontFamily: '"Playfair Display", serif',
+                      color: luxuryColors.textSecondary,
+                      fontWeight: 600,
+                      fontSize: '1.5rem',
+                      letterSpacing: '0.15em',
+                      textTransform: 'uppercase',
+                      minWidth: 350,
+                      borderBottom: `4px solid ${luxuryColors.gold}`,
+                      py: 3,
+                    }}
+                  >
+                    Department
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    sx={{
+                      fontFamily: '"Playfair Display", serif',
+                      color: luxuryColors.textSecondary,
+                      fontWeight: 600,
+                      fontSize: '1.5rem',
+                      letterSpacing: '0.15em',
+                      textTransform: 'uppercase',
+                      width: 150,
+                      borderBottom: `4px solid ${luxuryColors.gold}`,
+                      py: 3,
+                    }}
+                  >
+                    Total
+                  </TableCell>
+                  {criteriaHeaders?.map((header) => (
+                    <TableCell
+                      key={header.id}
+                      align="center"
+                      sx={{
+                        fontFamily: '"Playfair Display", serif',
+                        color: luxuryColors.textSecondary,
+                        fontWeight: 600,
+                        fontSize: '1.2rem',
+                        letterSpacing: '0.1em',
+                        width: 130,
+                        borderBottom: `4px solid ${luxuryColors.border}`,
+                        py: 3,
+                      }}
+                    >
+                      {header.name}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
 
-                      {/* スコアバー */}
-                      <Box
+              {/* ボディ */}
+              <TableBody>
+                {results.map((result) => {
+                  const isFirst = result.rank === 1;
+                  const isRevealed = revealedRanks.has(result.rank || 0);
+
+                  return (
+                    <TableRow
+                      key={result.departmentId}
+                      sx={{
+                        bgcolor: isFirst ? 'rgba(212, 175, 55, 0.06)' : 'transparent',
+                        '&:hover': {
+                          bgcolor: isFirst
+                            ? 'rgba(212, 175, 55, 0.1)'
+                            : 'rgba(0, 0, 0, 0.03)',
+                        },
+                      }}
+                    >
+                      {/* 順位 */}
+                      <TableCell
+                        align="center"
                         sx={{
-                          height: 12,
-                          bgcolor: 'grey.200',
-                          borderRadius: 2,
-                          overflow: 'hidden',
+                          borderBottom: `2px solid ${luxuryColors.border}`,
+                          py: 4,
                         }}
                       >
                         <Box
                           sx={{
-                            height: '100%',
-                            width: `${barWidth}%`,
-                            background: isFirst
-                              ? 'linear-gradient(90deg, #FF0080 0%, #FF4DA6 100%)'
-                              : 'linear-gradient(90deg, #00D4FF 0%, #66E5FF 100%)',
-                            borderRadius: 2,
-                            transition: 'width 0.5s ease',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
+                        >
+                          {isFirst && (
+                            <Box
+                              sx={{
+                                width: 16,
+                                height: 16,
+                                bgcolor: luxuryColors.gold,
+                                borderRadius: '50%',
+                                mr: 1.5,
+                              }}
+                            />
+                          )}
+                          <Typography
+                            sx={{
+                              fontFamily: '"Playfair Display", serif',
+                              fontWeight: isFirst ? 700 : 500,
+                              fontSize: '3rem',
+                              color: isFirst ? luxuryColors.gold : luxuryColors.text,
+                            }}
+                          >
+                            {result.rank}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+
+                      {/* 部署名（シール付き） */}
+                      <TableCell
+                        sx={{
+                          position: 'relative',
+                          borderBottom: `2px solid ${luxuryColors.border}`,
+                          height: 120,
+                          py: 4,
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            fontFamily: '"Playfair Display", serif',
+                            fontWeight: isFirst ? 700 : 500,
+                            fontSize: '2.5rem',
+                            color: isFirst ? luxuryColors.gold : luxuryColors.text,
+                            letterSpacing: '0.03em',
+                            visibility: isRevealed ? 'visible' : 'hidden',
+                          }}
+                        >
+                          {result.departmentName}
+                        </Typography>
+                        <SealOverlay
+                          isRevealed={isRevealed}
+                          onReveal={() => revealRank(result.rank || 0)}
+                          rank={result.rank || 0}
                         />
-                      </Box>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Box>
-            );
-          })}
+                      </TableCell>
+
+                      {/* 総合点 */}
+                      <CountUpCell
+                        value={result.totalScore}
+                        isFirst={isFirst}
+                        startAnimation={animationStarted}
+                      />
+
+                      {/* 項目別得点 */}
+                      {result.criteriaResults?.map((cr) => (
+                        <CountUpCell
+                          key={cr.criteriaId}
+                          value={cr.totalPoints}
+                          isFirst={isFirst}
+                          startAnimation={animationStarted}
+                        />
+                      ))}
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          {/* 装飾ライン */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              mt: 6,
+            }}
+          >
+            <Box
+              sx={{
+                width: 150,
+                height: 2,
+                bgcolor: luxuryColors.gold,
+              }}
+            />
+          </Box>
         </Box>
       )}
     </ResultsLayout>
