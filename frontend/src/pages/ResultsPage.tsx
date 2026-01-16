@@ -35,11 +35,13 @@ const luxuryColors = {
  * カウントアップ用カスタムフック
  */
 function useCountUp(targetValue: number, duration: number = 2000, startAnimation: boolean = true) {
-  const [count, setCount] = useState(0);
+  // アニメーション不要の場合は初期値としてターゲット値を設定
+  const initialValue = !startAnimation || targetValue === 0 ? targetValue : 0;
+  const [count, setCount] = useState(initialValue);
 
   useEffect(() => {
+    // アニメーション不要の場合はスキップ
     if (!startAnimation || targetValue === 0) {
-      setCount(targetValue);
       return;
     }
 
@@ -65,6 +67,11 @@ function useCountUp(targetValue: number, duration: number = 2000, startAnimation
       }
     };
   }, [targetValue, duration, startAnimation]);
+
+  // targetValueが変更された際に即時反映（アニメーション不要時）
+  if (!startAnimation || targetValue === 0) {
+    return targetValue;
+  }
 
   return count;
 }
@@ -178,7 +185,6 @@ function SealOverlay({
  */
 function ResultsPage() {
   const [revealedRanks, setRevealedRanks] = useState<Set<number>>(new Set());
-  const [animationStarted, setAnimationStarted] = useState(false);
 
   const {
     data: resultsData,
@@ -191,11 +197,8 @@ function ResultsPage() {
     refetchInterval: 5000,
   });
 
-  useEffect(() => {
-    if (resultsData && !animationStarted) {
-      setAnimationStarted(true);
-    }
-  }, [resultsData, animationStarted]);
+  // データがあればアニメーション開始（useEffectではなく直接計算）
+  const animationStarted = !!resultsData;
 
   const revealRank = useCallback((rank: number) => {
     setRevealedRanks((prev) => new Set([...prev, rank]));
@@ -431,35 +434,16 @@ function ResultsPage() {
                           py: 4,
                         }}
                       >
-                        <Box
+                        <Typography
                           sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
+                            fontFamily: '"Playfair Display", serif',
+                            fontWeight: isFirst ? 700 : 500,
+                            fontSize: '3rem',
+                            color: isFirst ? luxuryColors.gold : luxuryColors.text,
                           }}
                         >
-                          {isFirst && (
-                            <Box
-                              sx={{
-                                width: 16,
-                                height: 16,
-                                bgcolor: luxuryColors.gold,
-                                borderRadius: '50%',
-                                mr: 1.5,
-                              }}
-                            />
-                          )}
-                          <Typography
-                            sx={{
-                              fontFamily: '"Playfair Display", serif',
-                              fontWeight: isFirst ? 700 : 500,
-                              fontSize: '3rem',
-                              color: isFirst ? luxuryColors.gold : luxuryColors.text,
-                            }}
-                          >
-                            {result.rank}
-                          </Typography>
-                        </Box>
+                          {result.rank}
+                        </Typography>
                       </TableCell>
 
                       {/* 部署名（シール付き） */}
