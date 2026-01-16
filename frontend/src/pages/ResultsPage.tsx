@@ -31,6 +31,14 @@ const luxuryColors = {
   cream: '#FFFEF9',
 };
 
+// 評価項目の日本語訳マッピング
+const criteriaJapanese: Record<string, string> = {
+  'Philosophy': '理念・目的',
+  'Profession': '仕事・事業',
+  'People': '人材・風土',
+  'Privilege': '特権・待遇',
+};
+
 /**
  * カウントアップ用カスタムフック
  */
@@ -395,14 +403,31 @@ function ResultsPage() {
                         fontFamily: '"Playfair Display", serif',
                         color: luxuryColors.textSecondary,
                         fontWeight: 600,
-                        fontSize: '1.2rem',
-                        letterSpacing: '0.1em',
-                        width: 130,
+                        width: 150,
                         borderBottom: `4px solid ${luxuryColors.border}`,
-                        py: 3,
+                        py: 2,
                       }}
                     >
-                      {header.name}
+                      <Typography
+                        sx={{
+                          fontSize: '1.2rem',
+                          fontWeight: 600,
+                          letterSpacing: '0.1em',
+                          fontFamily: '"Playfair Display", serif',
+                        }}
+                      >
+                        {header.name}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: '0.85rem',
+                          fontWeight: 400,
+                          color: luxuryColors.textSecondary,
+                          mt: 0.5,
+                        }}
+                      >
+                        {criteriaJapanese[header.name] || ''}
+                      </Typography>
                     </TableCell>
                   ))}
                 </TableRow>
